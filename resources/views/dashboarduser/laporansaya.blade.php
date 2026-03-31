@@ -199,7 +199,7 @@
                             <!-- Image Header -->
                             <div class="relative h-48 overflow-hidden bg-slate-100">
                                 @if($laporan->foto && count($laporan->foto) > 0)
-                                    <img src="{{ asset('storage/' . $laporan->foto[0]) }}" alt="Foto Laporan" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                    <img src="{{ Storage::url($laporan->foto[0]) }}" alt="Foto Laporan" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                     @if(count($laporan->foto) > 1)
                                     <div class="absolute bottom-3 right-3 bg-brand-900/80 backdrop-blur text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1">
                                         <span class="material-symbols-outlined text-[12px]">filter_none</span>

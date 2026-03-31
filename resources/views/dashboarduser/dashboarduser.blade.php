@@ -90,7 +90,11 @@
 
         <div class="p-4 border-t border-slate-100">
             <div class="flex items-center gap-3 px-3 py-2 mb-2">
-                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=f1f5f9&color=0f172a" alt="Avatar" class="w-9 h-9 rounded-full border border-slate-200" />
+                @if(auth()->user()->foto_profil)
+                    <img src="{{ Storage::url(auth()->user()->foto_profil) }}" alt="Avatar" class="w-9 h-9 rounded-full border border-slate-200 object-cover" />
+                @else
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=f1f5f9&color=0f172a" alt="Avatar" class="w-9 h-9 rounded-full border border-slate-200" />
+                @endif
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-semibold text-slate-900 truncate">{{ auth()->user()->name }}</p>
                     <p class="text-[11px] text-slate-500 truncate">Warga Terverifikasi</p>

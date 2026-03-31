@@ -125,9 +125,9 @@ class DashboardAdminController extends Controller
 
         if ($request->hasFile('foto_profil')) {
             if ($admin->foto_profil) {
-                Storage::disk('public')->delete($admin->foto_profil);
+                Storage::delete($admin->foto_profil);
             }
-            $data['foto_profil'] = $request->file('foto_profil')->store('profil', 'public');
+            $data['foto_profil'] = $request->file('foto_profil')->store('profil');
         }
 
         $admin->update($data);

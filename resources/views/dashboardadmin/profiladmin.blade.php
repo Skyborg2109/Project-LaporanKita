@@ -183,7 +183,7 @@
                             <form action="{{ route('admin.profil.update') }}" method="POST" enctype="multipart/form-data" id="avatar-form">
                                 @csrf
                                 @if($admin->foto_profil)
-                                    <img id="admin-avatar" src="{{ asset('storage/' . $admin->foto_profil) }}" alt="Admin Avatar" class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl border-4 border-white shadow-lg object-cover bg-white" />
+                                    <img id="admin-avatar" src="{{ Storage::url($admin->foto_profil) }}" alt="Admin Avatar" class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl border-4 border-white shadow-lg object-cover bg-white" />
                                 @else
                                     <img id="admin-avatar" src="https://ui-avatars.com/api/?name={{ urlencode($admin->name) }}&background=f1f5f9&color=0f172a&size=128" alt="Admin Avatar" class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl border-4 border-white shadow-lg object-cover bg-white" />
                                 @endif

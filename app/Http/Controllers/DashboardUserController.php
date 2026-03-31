@@ -56,7 +56,7 @@ class DashboardUserController extends Controller
         $fotoPaths = [];
         if ($request->hasFile('foto')) {
             foreach ($request->file('foto') as $file) {
-                $fotoPaths[] = $file->store('laporans', 'public');
+                $fotoPaths[] = $file->store('laporans');
             }
         }
 
@@ -146,9 +146,9 @@ class DashboardUserController extends Controller
 
         if ($request->hasFile('foto_profil')) {
             if ($user->foto_profil) {
-                Storage::disk('public')->delete($user->foto_profil);
+                Storage::delete($user->foto_profil);
             }
-            $data['foto_profil'] = $request->file('foto_profil')->store('profil', 'public');
+            $data['foto_profil'] = $request->file('foto_profil')->store('profil');
         }
 
         $user->update($data);

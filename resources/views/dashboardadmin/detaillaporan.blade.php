@@ -224,7 +224,7 @@
                             @if($laporan->foto && count($laporan->foto) > 0)
                             <div class="mb-6 space-y-4">
                                 <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-100 shadow-sm aspect-video group relative">
-                                    <img id="main-photo" src="{{ asset('storage/' . $laporan->foto[0]) }}" alt="Bukti Laporan" class="w-full h-full object-cover cursor-zoom-in" onclick="window.open(this.src)" />
+                                    <img id="main-photo" src="{{ Storage::url($laporan->foto[0]) }}" alt="Bukti Laporan" class="w-full h-full object-cover cursor-zoom-in" onclick="window.open(this.src)" />
                                     <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                                         <span class="text-white text-xs font-bold px-3 py-1.5 bg-black/50 rounded-full backdrop-blur-sm">Klik untuk Zoom</span>
                                     </div>
@@ -233,8 +233,8 @@
                                 @if(count($laporan->foto) > 1)
                                 <div class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2">
                                     @foreach($laporan->foto as $index => $img)
-                                    <div class="aspect-square rounded-lg overflow-hidden border-2 @if($index === 0) border-brand-500 @else border-transparent @endif cursor-pointer hover:opacity-80 transition-all thumbnail-item shadow-sm" onclick="changeMainPhoto('{{ asset('storage/' . $img) }}', this)">
-                                        <img src="{{ asset('storage/' . $img) }}" class="w-full h-full object-cover" />
+                                    <div class="aspect-square rounded-lg overflow-hidden border-2 @if($index === 0) border-brand-500 @else border-transparent @endif cursor-pointer hover:opacity-80 transition-all thumbnail-item shadow-sm" onclick="changeMainPhoto('{{ Storage::url($img) }}', this)">
+                                        <img src="{{ Storage::url($img) }}" class="w-full h-full object-cover" />
                                     </div>
                                     @endforeach
                                 </div>

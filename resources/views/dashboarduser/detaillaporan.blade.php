@@ -252,14 +252,14 @@
                             @if($laporan->foto && count($laporan->foto) > 0)
                             <div class="mb-6 space-y-4">
                                 <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-100 shadow-sm">
-                                    <img id="main-photo" src="{{ asset('storage/' . $laporan->foto[0]) }}" alt="Bukti Laporan" class="w-full h-auto max-h-[500px] object-cover hover:scale-[1.02] transition-transform duration-700 cursor-zoom-in" onclick="window.open(this.src)" />
+                                    <img id="main-photo" src="{{ Storage::url($laporan->foto[0]) }}" alt="Bukti Laporan" class="w-full h-auto max-h-[500px] object-cover hover:scale-[1.02] transition-transform duration-700 cursor-zoom-in" onclick="window.open(this.src)" />
                                 </div>
                                 
                                 @if(count($laporan->foto) > 1)
                                 <div class="grid grid-cols-4 sm:grid-cols-6 gap-2">
                                     @foreach($laporan->foto as $index => $img)
-                                    <div class="aspect-square rounded-lg overflow-hidden border-2 @if($index === 0) border-brand-500 @else border-transparent @endif cursor-pointer hover:opacity-80 transition-all thumbnail-item" onclick="changeMainPhoto('{{ asset('storage/' . $img) }}', this)">
-                                        <img src="{{ asset('storage/' . $img) }}" class="w-full h-full object-cover" />
+                                    <div class="aspect-square rounded-lg overflow-hidden border-2 @if($index === 0) border-brand-500 @else border-transparent @endif cursor-pointer hover:opacity-80 transition-all thumbnail-item" onclick="changeMainPhoto('{{ Storage::url($img) }}', this)">
+                                        <img src="{{ Storage::url($img) }}" class="w-full h-full object-cover" />
                                     </div>
                                     @endforeach
                                 </div>
