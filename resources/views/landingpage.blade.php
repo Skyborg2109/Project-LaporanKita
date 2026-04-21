@@ -55,7 +55,7 @@
 
     <!-- Top Notice Bar -->
     <div class="bg-brand-900 text-white py-2 px-4 text-center text-xs font-medium tracking-wide">
-        🚨 Layanan Darurat 112 aktif 24/7 untuk kondisi mengancam nyawa. <a href="#" class="underline hover:text-brand-100 ml-1">Pelajari lebih lanjut.</a>
+        🚨 Layanan Darurat 112 aktif 24/7 untuk kondisi mengancam nyawa. <a href="{{ route('public.pelajari') }}" class="underline hover:text-brand-100 ml-1">Pelajari lebih lanjut.</a>
     </div>
 
     <!-- Navbar -->
@@ -308,7 +308,7 @@
                     <div class="md:w-1/3 reveal">
                         <h2 class="text-3xl font-extrabold text-brand-900 tracking-tight mb-4">Alur Singkat,<br/>Tindakan Cepat.</h2>
                         <p class="text-slate-600 text-sm leading-relaxed mb-6">Kami memangkas birokrasi berbelit. Setiap laporan langsung diarahkan ke dasbor instansi terkait untuk segera ditindaklanjuti secara transparan.</p>
-                        <a href="#" class="text-brand-600 font-semibold text-sm hover:underline flex items-center gap-1 w-fit">
+                        <a href="{{ route('public.prosedur') }}" class="text-brand-600 font-semibold text-sm hover:underline flex items-center gap-1 w-fit">
                             Pelajari SOP Kami <span class="material-symbols-outlined text-[16px]">arrow_right_alt</span>
                         </a>
                     </div>
@@ -370,7 +370,7 @@
                         <h2 class="text-2xl md:text-3xl font-extrabold text-brand-900 tracking-tight mb-2">Feed Laporan Terkini</h2>
                         <p class="text-sm text-slate-600">Real-time update dari berbagai daerah.</p>
                     </div>
-                    <a href="#" class="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold bg-white border border-slate-200 rounded-md text-brand-900 hover:bg-slate-50 transition-colors shadow-sm whitespace-nowrap">
+                    <a href="{{ route('public.semualaporan') }}" class="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold bg-white border border-slate-200 rounded-md text-brand-900 hover:bg-slate-50 transition-colors shadow-sm whitespace-nowrap">
                         Lihat Semua <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
                     </a>
                 </div>
@@ -468,10 +468,10 @@
                 <div>
                     <h4 class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider">Kebijakan</h4>
                     <ul class="space-y-3 text-sm text-slate-500">
-                        <li><a href="#" class="hover:text-brand-700 transition-colors">Syarat & Ketentuan</a></li>
-                        <li><a href="#" class="hover:text-brand-700 transition-colors">Kebijakan Privasi</a></li>
-                        <li><a href="#" class="hover:text-brand-700 transition-colors">Prosedur Laporan</a></li>
-                        <li><a href="#" class="hover:text-brand-700 transition-colors">FAQ / Bantuan</a></li>
+                        <li><a href="{{ route('public.syarat') }}" class="hover:text-brand-700 transition-colors">Syarat &amp; Ketentuan</a></li>
+                        <li><a href="{{ route('public.privasi') }}" class="hover:text-brand-700 transition-colors">Kebijakan Privasi</a></li>
+                        <li><a href="{{ route('public.prosedur') }}" class="hover:text-brand-700 transition-colors">Prosedur Laporan</a></li>
+                        <li><a href="{{ route('public.faq') }}" class="hover:text-brand-700 transition-colors">FAQ / Bantuan</a></li>
                     </ul>
                 </div>
             </div>

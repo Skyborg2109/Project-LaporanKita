@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardAdminController;
 use App\Http\Controllers\DashboardUserController;
+use App\Http\Controllers\PublicController;
 use App\Models\Laporan;
 
 // Halaman Guest
@@ -22,10 +23,24 @@ Route::get('/', function () {
     return view('landingpage', compact('laporans', 'latestReport', 'totalLaporan', 'laporanDiproses', 'laporanSelesai'));
 })->name('home');
 
+// ========================
+// Halaman Publik (tanpa login)
+// ========================
+Route::get('/semualaporan', [PublicController::class, 'semualaporan'])->name('public.semualaporan');
+Route::get('/pelajari', [PublicController::class, 'pelajari'])->name('public.pelajari');
+Route::get('/syarat-ketentuan', [PublicController::class, 'syaratKetentuan'])->name('public.syarat');
+Route::get('/kebijakan-privasi', [PublicController::class, 'kebijakanPrivasi'])->name('public.privasi');
+Route::get('/prosedur-laporan', [PublicController::class, 'prosedurLaporan'])->name('public.prosedur');
+Route::get('/faq', [PublicController::class, 'faq'])->name('public.faq');
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
+
+    // Google OAuth
+    Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 });
 
 // Halaman yang butuh login
