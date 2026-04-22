@@ -153,9 +153,9 @@ class DashboardUserController extends Controller
 
         if ($request->hasFile('foto_profil')) {
             if ($user->foto_profil) {
-                Storage::delete($user->foto_profil);
+                Storage::disk('public')->delete($user->foto_profil);
             }
-            $data['foto_profil'] = $request->file('foto_profil')->store('profil');
+            $data['foto_profil'] = $request->file('foto_profil')->store('profil', 'public');
         }
 
         // Automatic verification logic
