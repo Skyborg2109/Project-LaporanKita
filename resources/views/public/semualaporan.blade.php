@@ -172,8 +172,15 @@
                         @if($laporan->kategori)
                         <span class="inline-block text-[10px] font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2 py-0.5 rounded mb-2">{{ $laporan->kategori }}</span>
                         @endif
-                        <h3 class="font-bold text-brand-900 text-base mb-2 leading-tight line-clamp-2">{{ $laporan->judul }}</h3>
+                        <h3 class="font-bold text-brand-900 text-base mb-2 leading-tight line-clamp-2 hover:text-brand-600 transition-colors">
+                            <a href="{{ route('laporan.show', $laporan->id) }}">{{ $laporan->judul }}</a>
+                        </h3>
                         <p class="text-slate-500 text-sm mb-4 line-clamp-3 leading-relaxed">{{ $laporan->deskripsi }}</p>
+                        
+                        <a href="{{ route('laporan.show', $laporan->id) }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 hover:text-brand-800 transition-all group">
+                            Lihat Detail Laporan 
+                            <span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        </a>
                     </div>
 
                     {{-- Footer Card --}}

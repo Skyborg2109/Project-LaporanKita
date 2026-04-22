@@ -7,6 +7,7 @@ use App\Models\Laporan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Support;
 
 class DashboardUserController extends Controller
 {
@@ -75,8 +76,14 @@ class DashboardUserController extends Controller
 
     public function show($id)
     {
-        $laporan = Laporan::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
-        return view('dashboarduser.detaillaporan', compact('laporan'));
+        // Allow viewing any report if user is logged in
+        $laporan = Laporan::with(['user', 'supports'])->findOrFail($id);
+        
+        // Check if user has supported this report
+        $hasSupported = $laporan->supports()->where('user_id', Auth::id())->exists();
+        $supportCount = $laporan->supports()->count();
+
+        return view('dashboarduser.detaillaporan', compact('laporan', 'hasSupported', 'supportCount'));
     }
 
     public function laporansaya()
@@ -151,6 +158,13 @@ class DashboardUserController extends Controller
             $data['foto_profil'] = $request->file('foto_profil')->store('profil');
         }
 
+        // Automatic verification logic
+        if (!empty($data['nik']) && !empty($data['telepon']) && !empty($data['alamat']) && !empty($data['name'])) {
+            $data['is_verified'] = true;
+        } else {
+            $data['is_verified'] = false;
+        }
+
         $user->update($data);
 
         return redirect()->route('dashboarduser.profil')->with('success', 'Profil berhasil diperbarui.');
@@ -172,5 +186,33 @@ class DashboardUserController extends Controller
         $user->update(['password' => Hash::make($request->password)]);
 
         return redirect()->route('dashboarduser.profil')->with('success', 'Kata sandi berhasil diperbarui.')->with('tab', 'keamanan');
+    }
+
+    // ========================
+    // DUKUNGAN LAPORAN
+    // ========================
+    public function toggleSupport($id)
+    {
+        $user_id = Auth::id();
+        $support = Support::where('user_id', $user_id)->where('laporan_id', $id)->first();
+
+        if ($support) {
+            $support->delete();
+            $status = 'unsupported';
+        } else {
+            Support::create([
+                'user_id' => $user_id,
+                'laporan_id' => $id
+            ]);
+            $status = 'supported';
+        }
+
+        $count = Support::where('laporan_id', $id)->count();
+
+        return response()->json([
+            'success' => true,
+            'status' => $status,
+            'count' => $count
+        ]);
     }
 }

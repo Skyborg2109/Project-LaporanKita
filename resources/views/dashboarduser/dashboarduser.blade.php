@@ -97,7 +97,7 @@
                 @endif
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-semibold text-slate-900 truncate">{{ auth()->user()->name }}</p>
-                    <p class="text-[11px] text-slate-500 truncate">Warga Terverifikasi</p>
+                    <p class="text-[11px] text-slate-500 truncate">{{ auth()->user()->is_verified ? 'Warga Terverifikasi' : 'Belum Terverifikasi' }}</p>
                 </div>
             </div>
             

@@ -24,4 +24,14 @@ class Laporan extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function supports()
+    {
+        return $this->hasMany(Support::class);
+    }
+
+    public function supportingUsers()
+    {
+        return $this->belongsToMany(User::class, 'supports');
+    }
 }

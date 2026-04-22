@@ -59,6 +59,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/profil', [DashboardUserController::class, 'updateProfil'])->name('dashboarduser.profil.update');
     Route::post('/profil/password', [DashboardUserController::class, 'updatePassword'])->name('dashboarduser.profil.password');
 
+    // User Support
+    Route::post('/laporan/{id}/support', [DashboardUserController::class, 'toggleSupport'])->name('laporan.support');
+
     // User Notifikasi
     Route::get('/notifikasi', [DashboardUserController::class, 'notifikasi'])->name('dashboarduser.notifikasi');
     Route::post('/notifikasi/read', [DashboardUserController::class, 'markNotifRead'])->name('dashboarduser.notifikasi.read');

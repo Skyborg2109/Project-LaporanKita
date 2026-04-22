@@ -93,7 +93,7 @@
                 @endif
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-semibold text-slate-900 truncate">{{ $user->name }}</p>
-                    <p class="text-[11px] text-slate-500 truncate">Warga Terverifikasi</p>
+                    <p class="text-[11px] text-slate-500 truncate">{{ $user->is_verified ? 'Warga Terverifikasi' : 'Belum Terverifikasi' }}</p>
                 </div>
             </div>
             
@@ -198,8 +198,6 @@
                         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden text-center p-6 relative">
                             <div class="absolute top-0 left-0 right-0 h-24 bg-slate-50 border-b border-slate-100 z-0"></div>
 
-                            <form action="{{ route('dashboarduser.profil.update') }}" method="POST" enctype="multipart/form-data" id="foto-form">
-                                @csrf
                                 <div class="relative w-24 h-24 mx-auto mb-4 z-10">
                                     @if($user->foto_profil)
                                         <img id="avatar-preview" src="{{ Storage::url($user->foto_profil) }}" alt="Avatar" class="w-full h-full rounded-full border-4 border-white shadow-md object-cover" />
@@ -209,17 +207,36 @@
                                     <label for="foto_profil_input" class="absolute bottom-0 right-0 w-8 h-8 bg-brand-900 text-white rounded-full flex items-center justify-center hover:bg-slate-800 transition-colors shadow-sm border-2 border-white cursor-pointer z-20" title="Ubah Foto">
                                         <span class="material-symbols-outlined text-[16px]">photo_camera</span>
                                     </label>
-                                    <input type="file" id="foto_profil_input" name="foto_profil" accept="image/*" class="hidden" onchange="previewAvatar(this)" />
                                 </div>
-                            </form>
 
                             <h2 class="text-xl font-extrabold text-brand-900 mb-1 relative z-10">{{ $user->name }}</h2>
                             <p class="text-sm text-slate-500 font-medium mb-3 relative z-10">{{ $user->email }}</p>
 
+                            @if($user->is_verified)
                             <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-full shadow-sm mb-6 relative z-10">
                                 <span class="material-symbols-outlined icon-filled text-[14px]">verified</span>
                                 <span class="text-xs font-bold uppercase tracking-wider">Warga Terverifikasi</span>
                             </div>
+                            @else
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 border border-rose-100 text-rose-700 rounded-full shadow-sm mb-6 relative z-10">
+                                <span class="material-symbols-outlined text-[14px]">report</span>
+                                <span class="text-xs font-bold uppercase tracking-wider">Belum Terverifikasi</span>
+                            </div>
+                            <div class="bg-slate-50 rounded-lg p-3 mb-6 relative z-10 border border-slate-100 text-left">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Lengkapi Data Berikut:</p>
+                                <ul class="space-y-1">
+                                    <li class="flex items-center gap-2 text-[11px] {{ $user->nik ? 'text-emerald-600' : 'text-slate-400' }}">
+                                        <span class="material-symbols-outlined text-[14px]">{{ $user->nik ? 'check_circle' : 'circle' }}</span> NIK Kependudukan
+                                    </li>
+                                    <li class="flex items-center gap-2 text-[11px] {{ $user->telepon ? 'text-emerald-600' : 'text-slate-400' }}">
+                                        <span class="material-symbols-outlined text-[14px]">{{ $user->telepon ? 'check_circle' : 'circle' }}</span> Nomor WhatsApp
+                                    </li>
+                                    <li class="flex items-center gap-2 text-[11px] {{ $user->alamat ? 'text-emerald-600' : 'text-slate-400' }}">
+                                        <span class="material-symbols-outlined text-[14px]">{{ $user->alamat ? 'check_circle' : 'circle' }}</span> Alamat Domisili
+                                    </li>
+                                </ul>
+                            </div>
+                            @endif
 
                             <div class="grid grid-cols-2 gap-4 border-t border-slate-100 pt-5">
                                 <div>
@@ -256,6 +273,7 @@
                             <!-- TAB 1: Data Pribadi -->
                             <form id="form-pribadi" action="{{ route('dashboarduser.profil.update') }}" method="POST" enctype="multipart/form-data" class="{{ $activeTab === 'keamanan' ? 'hidden' : '' }} p-6 sm:p-8 space-y-6">
                                 @csrf
+                                <input type="file" id="foto_profil_input" name="foto_profil" accept="image/*" class="hidden" onchange="previewAvatar(this)" />
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     <!-- NIK -->
                                     <div class="sm:col-span-2">
@@ -430,12 +448,23 @@
         function previewAvatar(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
+                const oldSrc = document.getElementById('avatar-preview').src;
+                
                 reader.onload = e => {
                     document.getElementById('avatar-preview').src = e.target.result;
+                    
+                    // Small delay to let the preview render before confirm
+                    setTimeout(() => {
+                        if (confirm('Apakah Anda yakin ingin mengubah foto profil dengan foto ini?')) {
+                            document.getElementById('form-pribadi').submit();
+                        } else {
+                            // Reset preview and input if cancelled
+                            document.getElementById('avatar-preview').src = oldSrc;
+                            input.value = "";
+                        }
+                    }, 100);
                 };
                 reader.readAsDataURL(input.files[0]);
-                // Auto submit the hidden form with only foto
-                document.getElementById('form-pribadi').submit();
             }
         }
 

@@ -102,7 +102,7 @@
                 <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=f1f5f9&color=0f172a" alt="Avatar" class="w-9 h-9 rounded-full border border-slate-200" />
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-semibold text-slate-900 truncate">{{ auth()->user()->name }}</p>
-                    <p class="text-[11px] text-slate-500 truncate">Warga Terverifikasi</p>
+                    <p class="text-[11px] text-slate-500 truncate">{{ auth()->user()->is_verified ? 'Warga Terverifikasi' : 'Belum Terverifikasi' }}</p>
                 </div>
             </div>
             
@@ -283,9 +283,10 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <button class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200 rounded-lg transition-all text-slate-500 text-xs font-semibold shadow-sm">
-                                    <span class="material-symbols-outlined text-[16px]">thumb_up</span> 42 Dukungan
-                                </button>
+                                <button id="btn-support" data-id="{{ $laporan->id }}" class="flex items-center gap-1.5 px-3 py-1.5 {{ $hasSupported ? 'bg-brand-50 text-brand-600 border-brand-200' : 'bg-white text-slate-500 border-slate-200' }} border hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200 rounded-lg transition-all text-xs font-semibold shadow-sm group">
+                                     <span class="material-symbols-outlined text-[16px] {{ $hasSupported ? 'icon-filled' : '' }} group-active:scale-125 transition-transform">thumb_up</span> 
+                                     <span id="support-count">{{ $supportCount }}</span> Dukungan
+                                 </button>
                             </div>
                         </div>
                     </div>
@@ -484,6 +485,44 @@
                     mainContent.classList.add('opacity-100');
                 }
             }, 800);
+
+            // Support Button Logic
+            const btnSupport = document.getElementById('btn-support');
+            if (btnSupport) {
+                btnSupport.addEventListener('click', async function() {
+                    const id = this.getAttribute('data-id');
+                    const countEl = document.getElementById('support-count');
+                    const iconEl = this.querySelector('.material-symbols-outlined');
+                    
+                    try {
+                        const response = await fetch(`/laporan/${id}/support`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            }
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            countEl.innerText = data.count;
+                            if (data.status === 'supported') {
+                                this.classList.remove('bg-white', 'text-slate-500', 'border-slate-200');
+                                this.classList.add('bg-brand-50', 'text-brand-600', 'border-brand-200');
+                                iconEl.classList.add('icon-filled');
+                            } else {
+                                this.classList.remove('bg-brand-50', 'text-brand-600', 'border-brand-200');
+                                this.classList.add('bg-white', 'text-slate-500', 'border-slate-200');
+                                iconEl.classList.remove('icon-filled');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error toggling support:', error);
+                    }
+                });
+            }
         });
     </script>
 
