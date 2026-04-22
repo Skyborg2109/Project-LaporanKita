@@ -137,26 +137,53 @@
                 <input type="text" placeholder="Cari laporan Anda..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all" />
             </div>
             <div class="flex items-center gap-3">
-                <div class="relative" x-data="{ open: false }" id="notif-wrapper">
-                    <button onclick="toggleNotifDropdown()" class="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-full transition-all relative">
-                        <span class="material-symbols-outlined">notifications</span>
+                <!-- Desktop Notification Dropdown -->
+                <div class="relative" id="notif-wrapper">
+                    <button id="notif-toggle" class="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-full transition-all relative">
+                        <span class="material-symbols-outlined text-[24px]">notifications</span>
                         @if(isset($unreadCount) && $unreadCount > 0)
-                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white" id="notif-dot"></span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white animate-pulse"></span>
                         @endif
                     </button>
-                    <div id="notif-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden">
-                        <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
-                            <h3 class="font-bold text-sm text-slate-900">Notifikasi</h3>
-                            @if(isset($unreadCount) && $unreadCount > 0)
-                            <a href="{{ route('dashboarduser.notifikasi') }}" class="text-[11px] text-brand-600 hover:underline font-semibold">Tandai semua dibaca</a>
+
+                    <!-- Notif Dropdown Content -->
+                    <div id="notif-dropdown" class="absolute top-full right-0 mt-3 w-[320px] bg-white rounded-2xl shadow-2xl border border-slate-100 transition-all duration-300 opacity-0 scale-95 pointer-events-none z-[110] overflow-hidden text-left">
+                        <div class="p-4 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+                            <h4 class="text-sm font-bold text-slate-900">Pemberitahuan</h4>
+                            <a href="#" class="text-[11px] font-bold text-brand-600 hover:text-brand-900 transition-colors">Tandai Dibaca</a>
+                        </div>
+                        <div class="max-h-[350px] overflow-y-auto">
+                            @if(isset($unreadNotifications) && $unreadNotifications->count() > 0)
+                                @foreach($unreadNotifications->take(5) as $notif)
+                                <a href="{{ route('laporan.show', $notif->data['laporan_id']) }}" class="p-4 hover:bg-slate-50 transition-colors border-b border-slate-50 group block">
+                                    <div class="flex gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                                            <span class="material-symbols-outlined text-[18px]">@if(($notif->data['type'] ?? '') === 'status') rule @else assignment_late @endif</span>
+                                        </div>
+                                        <div class="flex-grow min-w-0">
+                                            <p class="text-xs text-slate-900 font-bold leading-snug group-hover:text-brand-900 transition-colors">
+                                                {{ $notif->data['pesan'] ?? 'Pembaruan Laporan' }}
+                                            </p>
+                                            <div class="flex items-center gap-1.5 mt-1">
+                                                <span class="text-[10px] font-medium text-slate-400">{{ $notif->created_at->diffForHumans() }}</span>
+                                                <span class="w-1.5 h-1.5 bg-brand-500 rounded-full"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                @endforeach
+                            @else
+                                <div class="p-10 text-center flex flex-col items-center gap-3">
+                                    <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-slate-300 text-[24px]">notifications_off</span>
+                                    </div>
+                                    <p class="text-xs font-medium text-slate-500">Tidak ada pemberitahuan baru</p>
+                                </div>
                             @endif
                         </div>
-                        <div class="max-h-64 overflow-y-auto divide-y divide-slate-50">
-                            <div class="px-4 py-8 text-center text-slate-400 text-xs">Belum ada notifikasi baru</div>
-                        </div>
-                        <div class="px-4 py-2 border-t border-slate-100 text-center">
-                            <a href="{{ route('dashboarduser.notifikasi') }}" class="text-xs text-brand-600 hover:underline font-semibold">Lihat semua notifikasi &rarr;</a>
-                        </div>
+                        <a href="{{ route('dashboarduser.notifikasi') }}" class="p-3 bg-slate-50 hover:bg-slate-100 text-center block text-xs font-bold text-slate-500 hover:text-brand-700 transition-all border-t border-slate-100">
+                            Lihat Semua Pemberitahuan
+                        </a>
                     </div>
                 </div>
 
@@ -371,12 +398,32 @@
                 previewItems.innerHTML = '';
                 previewListContainer.classList.add('hidden');
             });
-        });
 
-        function toggleNotifDropdown() {
-            const dropdown = document.getElementById('notif-dropdown');
-            dropdown.classList.toggle('hidden');
-        }
+            // Notification Toggle Logic
+            const notifToggle = document.getElementById('notif-toggle');
+            const notifDropdown = document.getElementById('notif-dropdown');
+
+            if (notifToggle && notifDropdown) {
+                notifToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isOpen = !notifDropdown.classList.contains('opacity-0');
+                    if (isOpen) {
+                        notifDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                        notifDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+                    } else {
+                        notifDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                        notifDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!notifDropdown.contains(e.target) && e.target !== notifToggle) {
+                        notifDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                        notifDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>
