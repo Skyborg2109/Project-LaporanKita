@@ -85,17 +85,7 @@
         </div>
 
         <div class="p-4 border-t border-slate-100">
-            <div class="flex items-center gap-3 px-3 py-2 mb-2">
-                @if($user->foto_profil)
-                    <img src="{{ str_starts_with($user->foto_profil, 'http') ? $user->foto_profil : Storage::url($user->foto_profil) }}" alt="Avatar" class="w-9 h-9 rounded-full border border-slate-200 object-cover" />
-                @else
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=f1f5f9&color=0f172a" alt="Avatar" class="w-9 h-9 rounded-full border border-slate-200" />
-                @endif
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-semibold text-slate-900 truncate">{{ $user->name }}</p>
-                    <p class="text-[11px] text-slate-500 truncate">{{ $user->is_verified ? 'Warga Terverifikasi' : 'Belum Terverifikasi' }}</p>
-                </div>
-            </div>
+
             
             <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
                 @csrf
@@ -174,6 +164,21 @@
                             <a href="{{ route('dashboarduser.notifikasi') }}" class="text-xs text-brand-600 hover:underline font-semibold">Lihat semua notifikasi &rarr;</a>
                         </div>
                     </div>
+                </div>
+
+                <!-- User Profile Info -->
+                <div class="flex items-center gap-3 pl-3 border-l border-slate-100 ml-1">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-bold text-slate-900 leading-tight">{{ $user->name }}</p>
+                        <p class="text-[10px] {{ $user->is_verified ? 'text-emerald-600' : 'text-slate-400' }} font-bold uppercase tracking-tighter">
+                            {{ $user->is_verified ? 'Terverifikasi' : 'Belum Terverifikasi' }}
+                        </p>
+                    </div>
+                    @if($user->foto_profil)
+                        <img src="{{ str_starts_with($user->foto_profil, 'http') ? $user->foto_profil : Storage::url($user->foto_profil) }}" alt="Avatar" class="w-9 h-9 rounded-full border border-slate-200 object-cover" />
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=f1f5f9&color=0f172a" alt="Avatar" class="w-9 h-9 rounded-full border border-slate-200" />
+                    @endif
                 </div>
             </div>
         </header>
