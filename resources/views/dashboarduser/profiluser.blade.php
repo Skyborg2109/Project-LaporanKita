@@ -430,12 +430,12 @@
         function previewAvatar(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = e => {
+                reader.onload = function(e) {
                     document.getElementById('avatar-preview').src = e.target.result;
+                    // Auto-submit foto-form setelah preview selesai dimuat
+                    document.getElementById('foto-form').submit();
                 };
                 reader.readAsDataURL(input.files[0]);
-                // Auto submit the hidden form with only foto
-                document.getElementById('form-pribadi').submit();
             }
         }
 
