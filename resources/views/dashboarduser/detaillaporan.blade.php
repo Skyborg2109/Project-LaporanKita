@@ -121,9 +121,54 @@
             <div class="text-sm font-bold tracking-tight text-brand-900 truncate flex-1 text-center">
                 Detail Laporan
             </div>
-            <button class="p-2 text-slate-400 hover:text-brand-600 transition-colors">
-                <span class="material-symbols-outlined">notifications</span>
-            </button>
+            <div class="relative" id="notif-wrapper-mobile">
+                <button id="notif-toggle-mobile" class="p-2 text-slate-400 hover:text-brand-600 transition-colors relative">
+                    <span class="material-symbols-outlined text-[24px]">notifications</span>
+                    @if(Auth::user()->unreadNotifications->count() > 0)
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white animate-pulse"></span>
+                    @endif
+                </button>
+
+                <!-- Mobile Notif Dropdown Content -->
+                <div id="notif-dropdown-mobile" class="fixed top-16 left-4 right-4 bg-white rounded-2xl shadow-2xl border border-slate-100 transition-all duration-300 opacity-0 scale-95 pointer-events-none z-[110] overflow-hidden text-left max-h-[70vh] flex flex-col">
+                    <div class="p-4 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+                        <h4 class="text-sm font-bold text-slate-900">Pemberitahuan</h4>
+                        <a href="#" class="text-[11px] font-bold text-brand-600 hover:text-brand-900 transition-colors">Tandai Dibaca</a>
+                    </div>
+                    <div class="overflow-y-auto flex-1">
+                        @forelse(Auth::user()->notifications->take(5) as $notif)
+                        <a href="{{ route('laporan.show', $notif->data['laporan_id']) }}" class="p-4 hover:bg-slate-50 transition-colors border-b border-slate-50 group block">
+                            <div class="flex gap-3">
+                                <div class="w-10 h-10 rounded-full @if($notif->unread()) bg-brand-50 text-brand-600 @else bg-slate-50 text-slate-400 @endif flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-[18px]">@if(($notif->data['type'] ?? '') === 'status') rule @else assignment_late @endif</span>
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <p class="text-xs text-slate-900 font-bold leading-snug group-hover:text-brand-900 transition-colors">
+                                        {{ $notif->data['pesan'] ?? ($notif->data['message'] ?? 'Pembaruan Laporan') }}
+                                    </p>
+                                    <div class="flex items-center gap-1.5 mt-1">
+                                        <span class="text-[10px] font-medium text-slate-400">{{ $notif->created_at->diffForHumans() }}</span>
+                                        @if($notif->unread())
+                                        <span class="w-1.5 h-1.5 bg-brand-500 rounded-full"></span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        @empty
+                        <div class="p-10 text-center flex flex-col items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-slate-300 text-[24px]">notifications_off</span>
+                            </div>
+                            <p class="text-xs font-medium text-slate-500">Tidak ada pemberitahuan baru</p>
+                        </div>
+                        @endforelse
+                    </div>
+                    <a href="{{ route('dashboarduser.notifikasi') }}" class="p-4 bg-slate-50 hover:bg-slate-100 text-center block text-xs font-bold text-brand-700 transition-all border-t border-slate-100">
+                        Lihat Semua Pemberitahuan
+                    </a>
+                </div>
+            </div>
         </header>
 
         <!-- Desktop Topbar -->
@@ -476,31 +521,47 @@
             thumbEl.classList.add('border-brand-500');
         }
 
+        // Notification Toggle Logic (Desktop & Mobile)
         document.addEventListener('DOMContentLoaded', () => {
-            // Notification Toggle Logic
-            const notifToggle = document.getElementById('notif-toggle');
-            const notifDropdown = document.getElementById('notif-dropdown');
+            const setups = [
+                { toggle: 'notif-toggle', dropdown: 'notif-dropdown' },
+                { toggle: 'notif-toggle-mobile', dropdown: 'notif-dropdown-mobile' }
+            ];
 
-            if (notifToggle && notifDropdown) {
-                notifToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const isOpen = !notifDropdown.classList.contains('opacity-0');
-                    if (isOpen) {
-                        notifDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                        notifDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-                    } else {
-                        notifDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-                        notifDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
-                    }
-                });
+            setups.forEach(setup => {
+                const btn = document.getElementById(setup.toggle);
+                const menu = document.getElementById(setup.dropdown);
 
-                document.addEventListener('click', (e) => {
-                    if (!notifDropdown.contains(e.target) && e.target !== notifToggle) {
-                        notifDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                        notifDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-                    }
-                });
-            }
+                if (btn && menu) {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        
+                        // Close other open dropdowns first
+                        setups.forEach(s => {
+                            if (s.dropdown !== setup.dropdown) {
+                                const otherMenu = document.getElementById(s.dropdown);
+                                if (otherMenu) otherMenu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                            }
+                        });
+
+                        const isOpen = !menu.classList.contains('opacity-0');
+                        if (isOpen) {
+                            menu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                            menu.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+                        } else {
+                            menu.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                            menu.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+                        }
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        if (!menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+                            menu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                            menu.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+                        }
+                    });
+                }
+            });
 
             // Skeleton Loader Logic
             setTimeout(() => {
