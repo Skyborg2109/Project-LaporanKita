@@ -79,9 +79,13 @@
         <!-- User Profile & Logout -->
         <div class="p-4 border-t border-slate-700/50 bg-slate-900/30">
             <div class="flex items-center gap-3 px-3 py-2 mb-2">
-                <div class="w-9 h-9 rounded-full bg-slate-700 flex items-center justify-center border border-slate-600">
-                    <span class="material-symbols-outlined text-white text-[18px]">admin_panel_settings</span>
-                </div>
+                @if(Auth::user()->foto_profil)
+                    <img src="{{ str_starts_with(Auth::user()->foto_profil, 'http') ? Auth::user()->foto_profil : Storage::url(Auth::user()->foto_profil) }}" class="w-9 h-9 rounded-full border border-slate-600 object-cover" />
+                @else
+                    <div class="w-9 h-9 rounded-full bg-slate-700 flex items-center justify-center border border-slate-600">
+                        <span class="material-symbols-outlined text-white text-[18px]">admin_panel_settings</span>
+                    </div>
+                @endif
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-semibold text-white truncate">{{ Auth::user()->name }}</p>
                     <p class="text-[11px] text-slate-400 truncate">Administrator</p>

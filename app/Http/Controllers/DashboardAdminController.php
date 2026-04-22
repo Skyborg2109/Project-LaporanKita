@@ -9,9 +9,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\LaporanStatusNotification;
+use App\Services\CloudinaryService;
 
 class DashboardAdminController extends Controller
 {
+    protected $cloudinary;
+
+    public function __construct(CloudinaryService $cloudinary)
+    {
+        $this->cloudinary = $cloudinary;
+    }
     public function index()
     {
         // Statistik Laporan
@@ -124,10 +131,7 @@ class DashboardAdminController extends Controller
         ];
 
         if ($request->hasFile('foto_profil')) {
-            if ($admin->foto_profil) {
-                Storage::delete($admin->foto_profil);
-            }
-            $data['foto_profil'] = $request->file('foto_profil')->store('profil');
+            $data['foto_profil'] = $this->cloudinary->upload($request->file('foto_profil')->getRealPath(), 'profil');
         }
 
         $admin->update($data);
