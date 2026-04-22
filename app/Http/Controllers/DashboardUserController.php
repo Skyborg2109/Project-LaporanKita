@@ -8,9 +8,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Support;
+use App\Services\CloudinaryService;
 
 class DashboardUserController extends Controller
 {
+    protected $cloudinary;
+
+    public function __construct(CloudinaryService $cloudinary)
+    {
+        $this->cloudinary = $cloudinary;
+    }
     public function index()
     {
         $user = Auth::user();
@@ -57,7 +64,7 @@ class DashboardUserController extends Controller
         $fotoPaths = [];
         if ($request->hasFile('foto')) {
             foreach ($request->file('foto') as $file) {
-                $fotoPaths[] = $file->store('laporans');
+                $fotoPaths[] = $this->cloudinary->upload($file->getRealPath(), 'laporans');
             }
         }
 
@@ -152,10 +159,7 @@ class DashboardUserController extends Controller
         ];
 
         if ($request->hasFile('foto_profil')) {
-            if ($user->foto_profil) {
-                Storage::disk('public')->delete($user->foto_profil);
-            }
-            $data['foto_profil'] = $request->file('foto_profil')->store('profil', 'public');
+            $data['foto_profil'] = $this->cloudinary->upload($request->file('foto_profil')->getRealPath(), 'profil');
         }
 
         // Automatic verification logic
@@ -214,5 +218,81 @@ class DashboardUserController extends Controller
             'status' => $status,
             'count' => $count
         ]);
+    }
+
+    // ========================
+    // EDIT & HAPUS LAPORAN
+    // ========================
+    public function edit($id)
+    {
+        $user = Auth::user();
+        $laporan = Laporan::where('user_id', $user->id)->findOrFail($id);
+        
+        if ($laporan->status !== 'baru') {
+            return redirect()->route('dashboarduser.laporan')->with('error', 'Laporan yang sedang diproses tidak dapat diubah.');
+        }
+
+        $unreadCount = $user->unreadNotifications()->count();
+
+        return view('dashboarduser.editlaporan', compact('laporan', 'unreadCount'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = Auth::user();
+        $laporan = Laporan::where('user_id', $user->id)->findOrFail($id);
+
+        if ($laporan->status !== 'baru') {
+            return redirect()->route('dashboarduser.laporan')->with('error', 'Laporan yang sedang diproses tidak dapat diubah.');
+        }
+
+        $request->validate([
+            'judul'   => 'required|string|max:255',
+            'kategori' => 'required|string|max:100',
+            'deskripsi' => 'required|string',
+            'lokasi'  => 'nullable|string|max:255',
+            'foto'    => 'nullable|array',
+            'foto.*'  => 'image|mimes:jpeg,png,jpg|max:5120',
+        ]);
+
+        $data = [
+            'judul'     => $request->judul,
+            'kategori'  => $request->kategori,
+            'deskripsi' => $request->deskripsi,
+            'lokasi'    => $request->lokasi,
+        ];
+
+        if ($request->hasFile('foto')) {
+            $fotoPaths = [];
+            foreach ($request->file('foto') as $file) {
+                $fotoPaths[] = $this->cloudinary->upload($file->getRealPath(), 'laporans');
+            }
+            $data['foto'] = $fotoPaths;
+        }
+
+        $laporan->update($data);
+
+        return redirect()->route('dashboarduser.laporan')->with('success', 'Laporan berhasil diperbarui!');
+    }
+
+    public function destroy($id)
+    {
+        $user = Auth::user();
+        $laporan = Laporan::where('user_id', $user->id)->findOrFail($id);
+
+        if ($laporan->status !== 'baru') {
+            return redirect()->route('dashboarduser.laporan')->with('error', 'Laporan yang sedang diproses tidak dapat dihapus.');
+        }
+
+        // Hapus foto dari storage
+        if ($laporan->foto) {
+            foreach ($laporan->foto as $foto) {
+                Storage::disk('public')->delete($foto);
+            }
+        }
+
+        $laporan->delete();
+
+        return redirect()->route('dashboarduser.laporan')->with('success', 'Laporan berhasil dihapus.');
     }
 }

@@ -163,7 +163,7 @@
                     {{-- Foto --}}
                     @if($laporan->foto && count($laporan->foto) > 0)
                     <div class="aspect-video overflow-hidden bg-slate-100">
-                        <img src="{{ asset('storage/' . $laporan->foto[0]) }}" alt="{{ $laporan->judul }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"/>
+                        <img src="{{ str_starts_with($laporan->foto[0], 'http') ? $laporan->foto[0] : Storage::url($laporan->foto[0]) }}" alt="{{ $laporan->judul }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"/>
                     </div>
                     @endif
 

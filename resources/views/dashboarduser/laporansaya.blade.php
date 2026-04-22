@@ -201,6 +201,20 @@
             
             <div class="max-w-5xl mx-auto space-y-6">
                 
+                @if(session('success'))
+                <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl flex items-center gap-3 animate-[fadeInDown_0.3s_ease-out]">
+                    <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                    <p class="text-sm font-bold">{{ session('success') }}</p>
+                </div>
+                @endif
+
+                @if(session('error'))
+                <div class="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-xl flex items-center gap-3 animate-[fadeInDown_0.3s_ease-out]">
+                    <span class="material-symbols-outlined text-[20px]">error</span>
+                    <p class="text-sm font-bold">{{ session('error') }}</p>
+                </div>
+                @endif
+                
                 @if(count($laporans) > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                         @foreach($laporans as $laporan)
@@ -208,7 +222,7 @@
                             <!-- Image Header -->
                             <div class="relative h-48 overflow-hidden bg-slate-100">
                                 @if($laporan->foto && count($laporan->foto) > 0)
-                                    <img src="{{ Storage::url($laporan->foto[0]) }}" alt="Foto Laporan" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                    <img src="{{ str_starts_with($laporan->foto[0], 'http') ? $laporan->foto[0] : Storage::url($laporan->foto[0]) }}" alt="Foto Laporan" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                     @if(count($laporan->foto) > 1)
                                     <div class="absolute bottom-3 right-3 bg-brand-900/80 backdrop-blur text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1">
                                         <span class="material-symbols-outlined text-[12px]">filter_none</span>
@@ -238,9 +252,25 @@
                                 
                                 <div class="flex items-center justify-between pt-4 border-t border-slate-100">
                                     <span class="text-[11px] font-medium text-slate-400">{{ $laporan->created_at->format('d M Y') }}</span>
-                                    <a href="{{ route('laporan.show', $laporan->id) }}" class="flex items-center gap-1.5 text-xs font-bold text-brand-900 hover:text-brand-600 transition-colors">
-                                        Detail Laporan <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-                                    </a>
+                                    <div class="flex items-center gap-3">
+                                        @if($laporan->status === 'baru')
+                                        <div class="flex items-center gap-2 pr-3 border-r border-slate-100">
+                                            <a href="{{ route('laporan.edit', $laporan->id) }}" class="p-1.5 text-amber-500 hover:bg-amber-50 rounded-lg transition-colors flex items-center justify-center" title="Edit Laporan">
+                                                <span class="material-symbols-outlined text-[18px]">edit_square</span>
+                                            </a>
+                                            <form action="{{ route('laporan.destroy', $laporan->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus laporan ini? Tindakan ini tidak dapat dibatalkan.');" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors flex items-center justify-center" title="Hapus Laporan">
+                                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        @endif
+                                        <a href="{{ route('laporan.show', $laporan->id) }}" class="flex items-center gap-1.5 text-xs font-bold text-brand-900 hover:text-brand-600 transition-colors">
+                                            Detail <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

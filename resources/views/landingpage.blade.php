@@ -258,7 +258,7 @@
                             <!-- Image Clipping Container -->
                             <div class="absolute inset-0 rounded-2xl overflow-hidden z-10 bg-slate-100 border border-slate-200/50 shadow-inner">
                                 @if($latestReport && $latestReport->foto && count($latestReport->foto) > 0)
-                                <img src="{{ asset('storage/' . $latestReport->foto[0]) }}" alt="Latest Report" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                <img src="{{ str_starts_with($latestReport->foto[0], 'http') ? $latestReport->foto[0] : Storage::url($latestReport->foto[0]) }}" alt="Latest Report" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                                 @else
                                 <img src="https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?auto=format&fit=crop&q=80&w=1000" alt="Petugas memperbaiki jalan" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                                 @endif

@@ -233,13 +233,31 @@
                                 <span class="text-slate-300">•</span>
                                 <span class="text-xs font-medium text-slate-500">{{ $laporan->created_at->format('d M Y, H:i') }}</span>
                             </div>
-                            <!-- Current Status Badge -->
-                            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md @if($laporan->status === 'baru') bg-rose-50 border-rose-200 text-rose-700 @elseif($laporan->status === 'diproses') bg-amber-50 border-amber-200 text-amber-700 @else bg-emerald-50 border-emerald-200 text-emerald-700 @endif shadow-sm">
-                                <span class="relative flex h-2 w-2">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full @if($laporan->status === 'baru') bg-rose-400 @elseif($laporan->status === 'diproses') bg-amber-400 @else bg-emerald-400 @endif opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-2 w-2 @if($laporan->status === 'baru') bg-rose-500 @elseif($laporan->status === 'diproses') bg-amber-500 @else bg-emerald-500 @endif"></span>
-                                </span>
-                                <span class="text-[11px] font-bold uppercase tracking-widest">{{ $laporan->status }}</span>
+                            <!-- Current Status Badge & Actions -->
+                            <div class="flex items-center gap-3">
+                                @if(auth()->id() === $laporan->user_id && $laporan->status === 'baru')
+                                <div class="flex items-center gap-2 pr-3 border-r border-slate-200">
+                                    <a href="{{ route('laporan.edit', $laporan->id) }}" class="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-md text-[11px] font-bold uppercase tracking-wider hover:bg-amber-100 transition-colors shadow-sm">
+                                        <span class="material-symbols-outlined text-[16px]">edit_square</span>
+                                        Edit
+                                    </a>
+                                    <form action="{{ route('laporan.destroy', $laporan->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus laporan ini? Tindakan ini tidak dapat dibatalkan.');" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-700 border border-rose-200 rounded-md text-[11px] font-bold uppercase tracking-wider hover:bg-rose-100 transition-colors shadow-sm">
+                                            <span class="material-symbols-outlined text-[16px]">delete</span>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                                @endif
+                                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md @if($laporan->status === 'baru') bg-rose-50 border-rose-200 text-rose-700 @elseif($laporan->status === 'diproses') bg-amber-50 border-amber-200 text-amber-700 @else bg-emerald-50 border-emerald-200 text-emerald-700 @endif shadow-sm">
+                                    <span class="relative flex h-2 w-2">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full @if($laporan->status === 'baru') bg-rose-400 @elseif($laporan->status === 'diproses') bg-amber-400 @else bg-emerald-400 @endif opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-2 w-2 @if($laporan->status === 'baru') bg-rose-500 @elseif($laporan->status === 'diproses') bg-amber-500 @else bg-emerald-500 @endif"></span>
+                                    </span>
+                                    <span class="text-[11px] font-bold uppercase tracking-widest">{{ $laporan->status }}</span>
+                                </div>
                             </div>
                         </div>
 
@@ -261,14 +279,14 @@
                             @if($laporan->foto && count($laporan->foto) > 0)
                             <div class="mb-6 space-y-4">
                                 <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-100 shadow-sm">
-                                    <img id="main-photo" src="{{ Storage::url($laporan->foto[0]) }}" alt="Bukti Laporan" class="w-full h-auto max-h-[500px] object-cover hover:scale-[1.02] transition-transform duration-700 cursor-zoom-in" onclick="window.open(this.src)" />
+                                    <img id="main-photo" src="{{ str_starts_with($laporan->foto[0], 'http') ? $laporan->foto[0] : Storage::url($laporan->foto[0]) }}" alt="Bukti Laporan" class="w-full h-auto max-h-[500px] object-cover hover:scale-[1.02] transition-transform duration-700 cursor-zoom-in" onclick="window.open(this.src)" />
                                 </div>
                                 
                                 @if(count($laporan->foto) > 1)
                                 <div class="grid grid-cols-4 sm:grid-cols-6 gap-2">
                                     @foreach($laporan->foto as $index => $img)
-                                    <div class="aspect-square rounded-lg overflow-hidden border-2 @if($index === 0) border-brand-500 @else border-transparent @endif cursor-pointer hover:opacity-80 transition-all thumbnail-item" onclick="changeMainPhoto('{{ Storage::url($img) }}', this)">
-                                        <img src="{{ Storage::url($img) }}" class="w-full h-full object-cover" />
+                                    <div class="aspect-square rounded-lg overflow-hidden border-2 @if($index === 0) border-brand-500 @else border-transparent @endif cursor-pointer hover:opacity-80 transition-all thumbnail-item" onclick="changeMainPhoto('{{ str_starts_with($img, 'http') ? $img : Storage::url($img) }}', this)">
+                                        <img src="{{ str_starts_with($img, 'http') ? $img : Storage::url($img) }}" class="w-full h-full object-cover" />
                                     </div>
                                     @endforeach
                                 </div>
