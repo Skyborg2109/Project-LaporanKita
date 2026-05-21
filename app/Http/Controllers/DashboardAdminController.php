@@ -156,4 +156,106 @@ class DashboardAdminController extends Controller
 
         return redirect()->route('admin.profil')->with('success', 'Kata sandi berhasil diperbarui.')->with('tab', 'keamanan');
     }
+
+    // ========================
+    // MANAJEMEN USER
+    // ========================
+    public function users(Request $request)
+    {
+        $query = \App\Models\User::withCount('laporans')->latest();
+
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        $users = $query->paginate(10)->withQueryString();
+
+        $totalUsers   = \App\Models\User::count();
+        $totalAdmin   = \App\Models\User::where('role', 'admin')->count();
+        $totalRegular = \App\Models\User::where('role', 'user')->count();
+        $newThisMonth = \App\Models\User::whereMonth('created_at', now()->month)
+                            ->whereYear('created_at', now()->year)->count();
+
+        return view('dashboardadmin.manajemenuser', compact(
+            'users', 'totalUsers', 'totalAdmin', 'totalRegular', 'newThisMonth'
+        ));
+    }
+
+    public function userDetail($id)
+    {
+        $user = \App\Models\User::withCount('laporans')->findOrFail($id);
+        $laporans = \App\Models\Laporan::where('user_id', $id)->latest()->paginate(5);
+        return view('dashboardadmin.detailuser', compact('user', 'laporans'));
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $user = \App\Models\User::findOrFail($id);
+
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email,' . $user->id,
+            'telepon'  => 'nullable|string|max:20',
+            'nik'      => 'nullable|string|max:20',
+            'nip'      => 'nullable|string|max:30',
+            'instansi' => 'nullable|string|max:255',
+            'alamat'   => 'nullable|string',
+        ]);
+
+        $user->update($request->only([
+            'name', 'email', 'telepon', 'nik', 'nip', 'instansi', 'alamat'
+        ]));
+
+        return back()->with('success', 'Data informasi user berhasil diperbarui.');
+    }
+
+
+    public function updateUserRole(Request $request, $id)
+    {
+        $request->validate(['role' => 'required|in:admin,user']);
+
+        $user = \App\Models\User::findOrFail($id);
+
+        // Cegah admin mengubah role dirinya sendiri
+        if ($user->id === Auth::id()) {
+            return back()->with('error', 'Anda tidak dapat mengubah role akun Anda sendiri.');
+        }
+
+        $user->update(['role' => $request->role]);
+        return back()->with('success', "Role {$user->name} berhasil diubah menjadi {$request->role}.");
+    }
+
+    public function toggleUserStatus(Request $request, $id)
+    {
+        $user = \App\Models\User::findOrFail($id);
+
+        if ($user->id === Auth::id()) {
+            return back()->with('error', 'Anda tidak dapat menonaktifkan akun Anda sendiri.');
+        }
+
+        $newStatus = $user->is_active ? 0 : 1;
+        $user->update(['is_active' => $newStatus]);
+        $label = $newStatus ? 'diaktifkan' : 'dinonaktifkan';
+        return back()->with('success', "Akun {$user->name} berhasil {$label}.");
+    }
+
+    public function deleteUser(Request $request, $id)
+    {
+        $user = \App\Models\User::findOrFail($id);
+
+        if ($user->id === Auth::id()) {
+            return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        $name = $user->name;
+        $user->delete();
+        return redirect()->route('admin.users')->with('success', "Akun \"{$name}\" berhasil dihapus.");
+    }
 }

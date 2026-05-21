@@ -1,0 +1,591 @@
+{
+	"info": {
+		"_postman_id": "laporankita-api-v1",
+		"name": "🗂️ LaporanKita REST API",
+		"description": "RESTful API untuk Project LaporanKita - Tugas Postman\n\n## Cara Pakai:\n1. Jalankan Laragon (pastikan MySQL & Apache aktif)\n2. Import collection ini ke Postman\n3. Atur variable `base_url` sesuai kebutuhan\n4. Mulai test dari endpoint Register/Login untuk mendapat token\n5. Copy token ke variable `auth_token`\n\n## Endpoints:\n- POST /api/auth/register\n- POST /api/auth/login  \n- GET  /api/auth/me\n- POST /api/auth/logout\n- GET  /api/laporan\n- GET  /api/laporan/{id}\n- POST /api/laporan\n- PUT  /api/laporan/{id}\n- DELETE /api/laporan/{id}\n- GET  /api/laporan/saya/list",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost/Project-LaporanKita/public",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string",
+			"description": "Token Bearer dari hasil login/register (isi setelah login)"
+		}
+	],
+	"item": [
+		{
+			"name": "🔐 Auth",
+			"item": [
+				{
+					"name": "Register User Baru",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Auto-simpan token setelah register",
+									"var json = pm.response.json();",
+									"if (json.success && json.data && json.data.token) {",
+									"    pm.collectionVariables.set('auth_token', json.data.token);",
+									"    console.log('✅ Token tersimpan:', json.data.token);",
+									"}",
+									"",
+									"pm.test('Status 201 Created', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test('Response sukses', function () {",
+									"    pm.expect(json.success).to.be.true;",
+									"});",
+									"pm.test('Ada token di response', function () {",
+									"    pm.expect(json.data.token).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Budi Mahasiswa\",\n    \"email\": \"budi@mahasiswa.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "## POST /api/auth/register\n\nMendaftar akun baru. Setelah berhasil, token otomatis tersimpan di collection variable `auth_token`.\n\n**Body (JSON):**\n- `name` - Nama lengkap\n- `email` - Email unik\n- `password` - Minimal 8 karakter\n- `password_confirmation` - Harus sama dengan password\n\n**Response:** 201 Created dengan Bearer Token"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Auto-simpan token setelah login",
+									"var json = pm.response.json();",
+									"if (json.success && json.data && json.data.token) {",
+									"    pm.collectionVariables.set('auth_token', json.data.token);",
+									"    console.log('✅ Token tersimpan:', json.data.token);",
+									"}",
+									"",
+									"pm.test('Status 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Login sukses', function () {",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.message).to.equal('Login berhasil');",
+									"});",
+									"pm.test('Ada Bearer Token', function () {",
+									"    pm.expect(json.data.token).to.not.be.empty;",
+									"    pm.expect(json.data.token_type).to.equal('Bearer');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"budi@mahasiswa.com\",\n    \"password\": \"password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "## POST /api/auth/login\n\nLogin dengan email dan password. Token Bearer akan otomatis tersimpan.\n\n**Body (JSON):**\n- `email` - Email terdaftar\n- `password` - Password user\n\n**Response:** 200 OK dengan Bearer Token"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile (Me)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var json = pm.response.json();",
+									"pm.test('Data user tersedia', function () {",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.data).to.have.property('email');",
+									"    pm.expect(json.data).to.have.property('name');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/me",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "me"]
+						},
+						"description": "## GET /api/auth/me\n\nAmbil data profil user yang sedang login.\n\n**Header:** Authorization: Bearer {token}\n\n**Response:** 200 OK dengan data user"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var json = pm.response.json();",
+									"pm.test('Logout berhasil', function () {",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.message).to.equal('Logout berhasil');",
+									"});",
+									"// Hapus token setelah logout",
+									"pm.collectionVariables.set('auth_token', '');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/logout",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "logout"]
+						},
+						"description": "## POST /api/auth/logout\n\nLogout dan hapus token aktif.\n\n**Header:** Authorization: Bearer {token}\n\n**Response:** 200 OK"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint autentikasi - Register, Login, Me, Logout"
+		},
+		{
+			"name": "📋 Laporan (Public)",
+			"item": [
+				{
+					"name": "Get Semua Laporan",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var json = pm.response.json();",
+									"pm.test('Response sukses dengan data', function () {",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.data).to.have.property('data');",
+									"    pm.expect(json.data.data).to.be.an('array');",
+									"});",
+									"pm.test('Ada informasi paginasi', function () {",
+									"    pm.expect(json.data).to.have.property('total');",
+									"    pm.expect(json.data).to.have.property('per_page');",
+									"    pm.expect(json.data).to.have.property('current_page');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/laporan",
+							"host": ["{{base_url}}"],
+							"path": ["api", "laporan"],
+							"query": [
+								{
+									"key": "status",
+									"value": "baru",
+									"disabled": true,
+									"description": "Filter: baru | diproses | selesai"
+								},
+								{
+									"key": "kategori",
+									"value": "Infrastruktur",
+									"disabled": true,
+									"description": "Filter by kategori"
+								},
+								{
+									"key": "search",
+									"value": "jalan",
+									"disabled": true,
+									"description": "Cari by judul"
+								}
+							]
+						},
+						"description": "## GET /api/laporan\n\nAmbil semua laporan (publik, tidak perlu token).\n\n**Query Params (opsional):**\n- `status` - Filter: baru | diproses | selesai\n- `kategori` - Filter by kategori\n- `search` - Cari by judul\n\n**Response:** 200 OK dengan data paginated"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Detail Laporan",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 200 OK atau 404', function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+									"});",
+									"var json = pm.response.json();",
+									"if (pm.response.code === 200) {",
+									"    pm.test('Data laporan tersedia', function () {",
+									"        pm.expect(json.success).to.be.true;",
+									"        pm.expect(json.data).to.have.property('judul');",
+									"        pm.expect(json.data).to.have.property('status');",
+									"        pm.expect(json.data).to.have.property('user');",
+									"    });",
+									"} else {",
+									"    pm.test('Laporan tidak ditemukan', function () {",
+									"        pm.expect(json.success).to.be.false;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/laporan/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "laporan", "1"]
+						},
+						"description": "## GET /api/laporan/{id}\n\nAmbil detail satu laporan berdasarkan ID.\n\n**Path Param:**\n- `id` - ID laporan\n\n**Response:** 200 OK atau 404 Not Found"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint publik yang tidak memerlukan autentikasi"
+		},
+		{
+			"name": "📝 Laporan (Protected - Butuh Token)",
+			"item": [
+				{
+					"name": "Buat Laporan Baru",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 201 Created', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"var json = pm.response.json();",
+									"pm.test('Laporan berhasil dibuat', function () {",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.message).to.equal('Laporan berhasil dibuat');",
+									"});",
+									"pm.test('Data laporan tersedia', function () {",
+									"    pm.expect(json.data).to.have.property('id');",
+									"    pm.expect(json.data).to.have.property('judul');",
+									"    pm.expect(json.data.status).to.equal('baru');",
+									"});",
+									"// Simpan ID laporan untuk dipakai endpoint lain",
+									"if (json.data && json.data.id) {",
+									"    pm.collectionVariables.set('laporan_id', json.data.id);",
+									"    console.log('📌 Laporan ID:', json.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"judul\": \"Jalan Rusak di Jl. Sudirman No.5\",\n    \"kategori\": \"Infrastruktur\",\n    \"deskripsi\": \"Terdapat lubang besar di jalan yang membahayakan pengendara motor dan mobil. Lubang sudah ada sejak 2 minggu lalu dan belum diperbaiki.\",\n    \"lokasi\": \"Jl. Sudirman No.5, Semarang\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/laporan",
+							"host": ["{{base_url}}"],
+							"path": ["api", "laporan"]
+						},
+						"description": "## POST /api/laporan\n\nBuat laporan baru. **Memerlukan Bearer Token.**\n\n**Header:** Authorization: Bearer {token}\n\n**Body (JSON):**\n- `judul` *(required)* - Judul laporan\n- `kategori` *(required)* - Kategori masalah\n- `deskripsi` *(required)* - Deskripsi detail laporan\n- `lokasi` *(optional)* - Lokasi kejadian\n- `foto` *(optional)* - URL foto\n\n**Response:** 201 Created"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Laporan",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var json = pm.response.json();",
+									"pm.test('Laporan berhasil diperbarui', function () {",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.message).to.equal('Laporan berhasil diperbarui');",
+									"});",
+									"pm.test('Data ter-update', function () {",
+									"    pm.expect(json.data.judul).to.equal('Jalan Rusak Sangat Parah - UPDATED');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"judul\": \"Jalan Rusak Sangat Parah - UPDATED\",\n    \"deskripsi\": \"Update: Kondisi semakin parah dan perlu segera diperbaiki. Sudah ada korban kecelakaan.\",\n    \"lokasi\": \"Jl. Sudirman No.5, Semarang Tengah\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/laporan/{{laporan_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "laporan", "{{laporan_id}}"]
+						},
+						"description": "## PUT /api/laporan/{id}\n\nUpdate laporan yang sudah ada. Hanya pemilik laporan yang bisa mengubah. **Memerlukan Bearer Token.**\n\n**Header:** Authorization: Bearer {token}\n\n**Path Param:**\n- `id` - ID laporan (otomatis dari variable `laporan_id`)\n\n**Body (JSON) - semua field opsional:**\n- `judul` - Judul baru\n- `kategori` - Kategori baru\n- `deskripsi` - Deskripsi baru\n- `lokasi` - Lokasi baru\n\n**Response:** 200 OK"
+					},
+					"response": []
+				},
+				{
+					"name": "Hapus Laporan",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var json = pm.response.json();",
+									"pm.test('Laporan berhasil dihapus', function () {",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.message).to.equal('Laporan berhasil dihapus');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/laporan/{{laporan_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "laporan", "{{laporan_id}}"]
+						},
+						"description": "## DELETE /api/laporan/{id}\n\nHapus laporan. Hanya pemilik yang bisa menghapus. **Memerlukan Bearer Token.**\n\n**Header:** Authorization: Bearer {token}\n\n**Path Param:**\n- `id` - ID laporan (otomatis dari variable `laporan_id`)\n\n**Response:** 200 OK"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Laporan Saya",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var json = pm.response.json();",
+									"pm.test('Data laporan saya tersedia', function () {",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.data.data).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/laporan/saya/list",
+							"host": ["{{base_url}}"],
+							"path": ["api", "laporan", "saya", "list"]
+						},
+						"description": "## GET /api/laporan/saya/list\n\nAmbil semua laporan milik user yang sedang login. **Memerlukan Bearer Token.**\n\n**Header:** Authorization: Bearer {token}\n\n**Response:** 200 OK dengan daftar laporan milik sendiri"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint yang memerlukan autentikasi (Bearer Token)"
+		}
+	]
+}

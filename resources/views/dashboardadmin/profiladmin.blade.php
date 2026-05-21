@@ -68,6 +68,9 @@
             <a href="{{ route('admin.filter') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg font-medium text-sm transition-colors group">
                 <span class="material-symbols-outlined text-[20px] group-hover:text-teal-400">filter_alt</span>Filter Laporan
             </a>
+            <a href="{{ route('admin.users') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg font-medium text-sm transition-colors group">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-teal-400">group</span>Manajemen User
+            </a>
             <div class="mt-6 pt-4 border-t border-slate-700/50">
                 <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-3">Pengaturan</div>
                 <a href="{{ route('admin.profil') }}" class="flex items-center gap-3 px-3 py-2.5 bg-slate-800 text-white rounded-lg font-semibold text-sm border border-slate-700">

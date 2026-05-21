@@ -1,0 +1,159 @@
+{
+	"info": {
+		"_postman_id": "d1e2f3a4-b5c6-7d8e-9f0a-1b2c3d4e5f6g",
+		"name": "Delicio Food API",
+		"description": "Collection for Delicio Food Ordering System Management Panel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Menu Management",
+			"item": [
+				{
+					"name": "Get All Menu",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/menu.php",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"menu.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add New Menu",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama\": \"Burger Wagyu Premium\",\n    \"harga\": 75000,\n    \"kategori\": \"Makanan\",\n    \"gambar\": \"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/menu.php",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"menu.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Menu",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"nama\": \"Nasi Goreng Spesial (Updated)\",\n    \"harga\": 27000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/menu.php?id=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"menu.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Menu",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/menu.php?id=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"menu.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Place Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customer_name\": \"Budi Postman\",\n    \"items\": [\n        {\n            \"product_id\": 1,\n            \"name\": \"Nasi Goreng Spesial\",\n            \"price\": 25000,\n            \"quantity\": 2\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/order.php",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order.php"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost/Project-LaporanKita/public/pemesanan-makanan",
+			"type": "string"
+		}
+	]
+}

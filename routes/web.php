@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardAdminController;
 use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\NaiveBayesController;
 use App\Models\Laporan;
 
 // Halaman Guest
@@ -81,7 +82,25 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboardadmin/profil', [DashboardAdminController::class, 'profil'])->name('admin.profil');
         Route::post('/dashboardadmin/profil', [DashboardAdminController::class, 'updateProfil'])->name('admin.profil.update');
         Route::post('/dashboardadmin/profil/password', [DashboardAdminController::class, 'updatePassword'])->name('admin.profil.password');
+
+        // Admin User Management
+        Route::get('/dashboardadmin/users', [DashboardAdminController::class, 'users'])->name('admin.users');
+        Route::get('/dashboardadmin/users/{id}', [DashboardAdminController::class, 'userDetail'])->name('admin.users.show');
+        Route::put('/dashboardadmin/users/{id}', [DashboardAdminController::class, 'updateUser'])->name('admin.users.update');
+        Route::patch('/dashboardadmin/users/{id}/role', [DashboardAdminController::class, 'updateUserRole'])->name('admin.users.role');
+        Route::patch('/dashboardadmin/users/{id}/status', [DashboardAdminController::class, 'toggleUserStatus'])->name('admin.users.status');
+        Route::delete('/dashboardadmin/users/{id}', [DashboardAdminController::class, 'deleteUser'])->name('admin.users.delete');
+
+        // Naive Bayes Klasifikasi
+        Route::get('/dashboardadmin/naivebayes', [NaiveBayesController::class, 'index'])->name('admin.naivebayes');
+        Route::post('/dashboardadmin/naivebayes/train', [NaiveBayesController::class, 'train'])->name('admin.naivebayes.train');
+        Route::post('/dashboardadmin/naivebayes/klasifikasi', [NaiveBayesController::class, 'klasifikasi'])->name('admin.naivebayes.klasifikasi');
+        Route::get('/dashboardadmin/naivebayes/evaluasi', [NaiveBayesController::class, 'evaluasi'])->name('admin.naivebayes.evaluasi');
+        Route::post('/dashboardadmin/naivebayes/reset', [NaiveBayesController::class, 'reset'])->name('admin.naivebayes.reset');
     });
+
+    // AJAX Predict (untuk form buat laporan user) — butuh auth tapi bukan admin
+    Route::post('/api/naivebayes/predict', [NaiveBayesController::class, 'predictAjax'])->name('naivebayes.predict');
 });
     
 
