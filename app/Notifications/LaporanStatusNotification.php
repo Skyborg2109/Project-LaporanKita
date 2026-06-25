@@ -34,11 +34,12 @@ class LaporanStatusNotification extends Notification
         };
 
         return [
-            'laporan_id' => $this->laporan->id,
-            'judul'      => $this->laporan->judul,
-            'status'     => $this->laporan->status,
+            'laporan_id'   => $this->laporan->id,
+            'judul'        => $this->laporan->judul,
+            'type'         => 'status',
+            'status'       => $this->laporan->status,
             'status_label' => $statusLabel,
-            'pesan'      => $this->pesan ?: "Status laporan Anda \"" . $this->laporan->judul . "\" telah diperbarui menjadi '{$statusLabel}'.",
+            'pesan'        => $this->pesan ?: "Status laporan Anda \"" . $this->laporan->judul . "\" telah diperbarui menjadi '{$statusLabel}'.",
         ];
     }
 }

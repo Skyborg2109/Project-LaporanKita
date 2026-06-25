@@ -198,6 +198,42 @@
                         </div>
                         @endif
                     </div>
+
+                    {{-- Support Button --}}
+                    <div class="px-5 py-2.5 border-t border-slate-100 bg-slate-50/50">
+                        @auth
+                            @if(Auth::user()->role !== 'admin')
+                                <button
+                                    data-action="toggle-support"
+                                    data-laporan-id="{{ $laporan->id }}"
+                                    class="support-btn w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200
+                                        {{ $supportedLaporanIds->contains($laporan->id)
+                                            ? 'bg-brand-500 text-white hover:bg-brand-600'
+                                            : 'bg-white border border-slate-200 text-slate-600 hover:border-brand-500 hover:text-brand-600' }}"
+                                    data-supported="{{ $supportedLaporanIds->contains($laporan->id) ? '1' : '0' }}"
+                                >
+                                    <span class="material-symbols-outlined text-[16px] {{ $supportedLaporanIds->contains($laporan->id) ? 'icon-filled' : '' }}">thumb_up</span>
+                                    <span class="support-label">{{ $supportedLaporanIds->contains($laporan->id) ? 'Didukung' : 'Beri Dukungan' }}</span>
+                                    <span class="support-count bg-white/20 text-[11px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
+                                        {{ $laporan->supports->count() }}
+                                    </span>
+                                </button>
+                            @else
+                                <div class="flex items-center justify-center gap-1.5 text-xs text-slate-400">
+                                    <span class="material-symbols-outlined text-[14px]">thumb_up</span>
+                                    <span>{{ $laporan->supports->count() }} dukungan</span>
+                                </div>
+                            @endif
+                        @else
+                            <a href="/login" class="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-500 hover:border-brand-500 hover:text-brand-600 transition-all duration-200">
+                                <span class="material-symbols-outlined text-[16px]">thumb_up</span>
+                                <span>Login untuk memberi like</span>
+                                <span class="bg-slate-100 text-slate-500 text-[11px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
+                                    {{ $laporan->supports->count() }}
+                                </span>
+                            </a>
+                        @endauth
+                    </div>
                 </div>
                 @endforeach
             </div>
@@ -214,5 +250,66 @@
     <footer class="bg-white border-t border-slate-100 py-6 text-center text-xs text-slate-400">
         <p>© 2026 LaporanKita. <a href="{{ route('home') }}" class="hover:text-brand-600 transition-colors">Kembali ke Beranda</a></p>
     </footer>
+
+    @auth
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.body.addEventListener('click', function (e) {
+                const btn = e.target.closest('[data-action="toggle-support"]');
+                if (!btn) return;
+
+                const laporanId = btn.dataset.laporanId;
+                const isSupported = btn.dataset.supported === '1';
+
+                // Optimistic UI update
+                btn.disabled = true;
+                btn.classList.add('opacity-70');
+
+                fetch(`/laporan/${laporanId}/support`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const nowSupported = data.status === 'supported';
+                        btn.dataset.supported = nowSupported ? '1' : '0';
+
+                        const icon = btn.querySelector('.material-symbols-outlined');
+                        const label = btn.querySelector('.support-label');
+                        const count = btn.querySelector('.support-count');
+
+                        // Update count
+                        count.textContent = data.count;
+
+                        if (nowSupported) {
+                            btn.classList.remove('bg-white', 'border', 'border-slate-200', 'text-slate-600', 'hover:border-brand-500', 'hover:text-brand-600');
+                            btn.classList.add('bg-brand-500', 'text-white', 'hover:bg-brand-600');
+                            icon.classList.add('icon-filled');
+                            label.textContent = 'Didukung';
+                        } else {
+                            btn.classList.remove('bg-brand-500', 'text-white', 'hover:bg-brand-600');
+                            btn.classList.add('bg-white', 'border', 'border-slate-200', 'text-slate-600', 'hover:border-brand-500', 'hover:text-brand-600');
+                            icon.classList.remove('icon-filled');
+                            label.textContent = 'Beri Dukungan';
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error('Support error:', err);
+                    alert('Terjadi kesalahan. Silakan coba lagi.');
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-70');
+                });
+            });
+        });
+    </script>
+    @endauth
 </body>
 </html>

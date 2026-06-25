@@ -35,54 +35,52 @@
 <body class="bg-[#FAFAFA] text-slate-900 antialiased flex h-screen overflow-hidden selection:bg-brand-500 selection:text-white">
 
     <!-- ==================== SIDEBAR (DESKTOP) ==================== -->
-    <aside class="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 h-full z-20 shrink-0">
-        <div class="h-16 flex items-center px-6 border-b border-slate-100">
+    <aside class="hidden md:flex flex-col w-64 h-full z-20 shrink-0 bg-gradient-to-b from-teal-600 via-brand-500 to-emerald-500 border-r-0">
+        <div class="h-16 flex items-center px-6 border-b border-white/20">
             <div class="flex items-center gap-2.5">
-                <div class="bg-brand-900 text-white p-1.5 rounded flex items-center justify-center">
+                <div class="bg-white/20 backdrop-blur-sm text-white p-1.5 rounded-lg">
                     <span class="material-symbols-outlined icon-filled text-[18px]">maps_ugc</span>
                 </div>
-                <span class="text-lg font-bold tracking-tight text-brand-900">Laporan<span class="text-brand-600">Kita</span></span>
+                <span class="text-lg font-bold tracking-tight text-white">Laporan<span class="text-emerald-200">Kita</span></span>
             </div>
         </div>
 
         <div class="flex-1 overflow-y-auto py-6 px-4 space-y-1.5">
-            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-2">Menu Utama</div>
+            <div class="text-[10px] font-bold text-white/50 uppercase tracking-widest px-2 mb-2">Menu Utama</div>
             
-            <a href="{{ route('dashboarduser.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 hover:text-brand-900 rounded-lg font-medium text-sm transition-colors group">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-brand-600 transition-colors">dashboard</span>
+            <a href="{{ route('dashboarduser.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-white/80 hover:bg-white/15 hover:text-white rounded-xl font-medium text-sm transition-all group">
+                <span class="material-symbols-outlined text-[20px] text-sky-200 group-hover:text-white transition-colors">dashboard</span>
                 Dashboard
             </a>
             
-            <a href="{{ route('laporan.create') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 hover:text-brand-900 rounded-lg font-medium text-sm transition-colors group">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-brand-600 transition-colors">add_box</span>
+            <a href="{{ route('laporan.create') }}" class="flex items-center gap-3 px-3 py-2.5 text-white/80 hover:bg-white/15 hover:text-white rounded-xl font-medium text-sm transition-all group">
+                <span class="material-symbols-outlined text-[20px] text-emerald-200 group-hover:text-white transition-colors">add_box</span>
                 Buat Laporan
             </a>
             
-            <a href="{{ route('dashboarduser.laporan') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 hover:text-brand-900 rounded-lg font-medium text-sm transition-colors group">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-brand-600 transition-colors">assignment</span>
+            <a href="{{ route('dashboarduser.laporan') }}" class="flex items-center gap-3 px-3 py-2.5 text-white/80 hover:bg-white/15 hover:text-white rounded-xl font-medium text-sm transition-all group">
+                <span class="material-symbols-outlined text-[20px] text-amber-200 group-hover:text-white transition-colors">assignment</span>
                 Laporan Saya
             </a>
 
-            <a href="{{ route('dashboarduser.notifikasi') }}" class="flex items-center gap-3 px-3 py-2.5 bg-brand-50 text-brand-900 rounded-lg font-semibold text-sm transition-colors">
-                <span class="material-symbols-outlined icon-filled text-[20px] text-brand-600">notifications</span>
+            <a href="{{ route('dashboarduser.notifikasi') }}" class="flex items-center gap-3 px-3 py-2.5 bg-white/20 backdrop-blur-sm text-white rounded-xl font-semibold text-sm shadow-sm transition-all relative">
+                <span class="material-symbols-outlined icon-filled text-[20px]">notifications</span>
                 Notifikasi
                 @if(isset($unreadCount) && $unreadCount > 0)
-                <span class="ml-auto bg-rose-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center">{{ $unreadCount }}</span>
+                <span class="ml-auto bg-rose-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center shadow-sm">{{ $unreadCount }}</span>
                 @endif
             </a>
 
-            <a href="{{ route('dashboarduser.profil') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 hover:text-brand-900 rounded-lg font-medium text-sm transition-colors group">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-brand-600 transition-colors">manage_accounts</span>
+            <a href="{{ route('dashboarduser.profil') }}" class="flex items-center gap-3 px-3 py-2.5 text-white/80 hover:bg-white/15 hover:text-white rounded-xl font-medium text-sm transition-all group">
+                <span class="material-symbols-outlined text-[20px] text-emerald-200 group-hover:text-white transition-colors">manage_accounts</span>
                 Profil Saya
             </a>
         </div>
 
-        <div class="p-4 border-t border-slate-100">
-
-            
+        <div class="p-4 border-t border-white/20">
             <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
                 @csrf
-                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 text-rose-600 hover:bg-rose-50 rounded-lg font-medium text-sm transition-colors text-left">
+                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 text-white/70 hover:bg-white/15 hover:text-white rounded-xl font-medium text-sm transition-all text-left">
                     <span class="material-symbols-outlined text-[20px]">logout</span>
                     Keluar
                 </button>
@@ -157,10 +155,10 @@
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
                 <input type="text" placeholder="Cari laporan Anda..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all" />
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-4">
                 <!-- Desktop Notification Dropdown -->
                 <div class="relative" id="notif-wrapper">
-                    <button id="notif-toggle" class="p-2 text-brand-600 bg-brand-50 rounded-full transition-all relative">
+                    <button id="notif-toggle" class="p-2 text-brand-600 bg-brand-50 rounded-full transition-all relative flex items-center justify-center">
                         <span class="material-symbols-outlined text-[24px] icon-filled">notifications</span>
                         @if(isset($unreadCount) && $unreadCount > 0)
                         <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white animate-pulse"></span>
@@ -208,20 +206,14 @@
                     </div>
                 </div>
 
-                <!-- User Profile Info -->
-                <div class="flex items-center gap-3 pl-3 border-l border-slate-100 ml-1">
-                    <div class="text-right hidden sm:block">
-                        <p class="text-xs font-bold text-slate-900 leading-tight">{{ auth()->user()->name }}</p>
-                        <p class="text-[10px] {{ auth()->user()->is_verified ? 'text-emerald-600' : 'text-slate-400' }} font-bold uppercase tracking-tighter">
-                            {{ auth()->user()->is_verified ? 'Terverifikasi' : 'Belum Terverifikasi' }}
-                        </p>
-                    </div>
+                <!-- User Profile Avatar (Berdampingan langsung dengan notif) -->
+                <a href="{{ route('dashboarduser.profil') }}" class="flex items-center hover:opacity-85 transition-all shrink-0" title="Profil Saya">
                     @if(auth()->user()->foto_profil)
                         <img src="{{ str_starts_with(auth()->user()->foto_profil, 'http') ? auth()->user()->foto_profil : Storage::url(auth()->user()->foto_profil) }}" alt="Avatar" class="w-9 h-9 rounded-full border border-slate-200 object-cover" />
                     @else
                         <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=f1f5f9&color=0f172a" alt="Avatar" class="w-9 h-9 rounded-full border border-slate-200" />
                     @endif
-                </div>
+                </a>
             </div>
         </header>
 
@@ -247,15 +239,46 @@
                         @php
                             $data = $notif->data;
                             $isRead = !is_null($notif->read_at);
-                            $statusColor = match($data['status'] ?? '') {
-                                'selesai' => 'text-emerald-600 bg-emerald-50',
-                                'diproses' => 'text-amber-600 bg-amber-50',
-                                'baru' => 'text-brand-600 bg-brand-50',
+
+                            // Deteksi jenis notifikasi secara robust
+                            $notifType = $data['type'] ?? '';
+                            if ($notifType === '' && isset($data['kategori_baru'])) {
+                                $notifType = 'kategori_dikoreksi';
+                            } elseif ($notifType === '' && (isset($data['status']) || isset($data['status_label']))) {
+                                $notifType = 'status';
+                            }
+
+                            // Heading sesuai jenis
+                            $heading = match($notifType) {
+                                'kategori_dikoreksi' => 'Kategori Laporan Dikoreksi',
+                                'status'             => 'Status Laporan Diperbarui',
+                                default              => 'Pembaruan Laporan',
+                            };
+
+                            // Badge label
+                            $badgeLabel = match($notifType) {
+                                'kategori_dikoreksi' => 'Kategori Dikoreksi',
+                                'status'             => $data['status_label'] ?? 'Status Diperbarui',
+                                default              => 'Pembaruan',
+                            };
+
+                            $statusColor = match($notifType) {
+                                'kategori_dikoreksi' => 'text-sky-600 bg-sky-50',
+                                'status' => match($data['status'] ?? '') {
+                                    'selesai' => 'text-emerald-600 bg-emerald-50',
+                                    'diproses' => 'text-amber-600 bg-amber-50',
+                                    'baru' => 'text-brand-600 bg-brand-50',
+                                    default => 'text-slate-600 bg-slate-50',
+                                },
                                 default => 'text-slate-600 bg-slate-50',
                             };
-                            $iconName = match($data['status'] ?? '') {
-                                'selesai' => 'check_circle',
-                                'diproses' => 'autorenew',
+                            $iconName = match($notifType) {
+                                'kategori_dikoreksi' => 'edit_note',
+                                'status' => match($data['status'] ?? '') {
+                                    'selesai' => 'check_circle',
+                                    'diproses' => 'autorenew',
+                                    default => 'notifications_active',
+                                },
                                 default => 'notifications_active',
                             };
                         @endphp
@@ -264,11 +287,13 @@
                                 <span class="material-symbols-outlined icon-filled text-[20px]">{{ $iconName }}</span>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-semibold text-slate-900 mb-0.5">{{ $data['judul'] ?? 'Laporan Anda' }}</p>
-                                <p class="text-xs text-slate-600 mb-1.5 leading-relaxed">{{ $data['pesan'] ?? '' }}</p>
+                                <p class="text-sm font-semibold text-slate-900 mb-0.5">{{ $heading }}</p>
+                                <p class="text-xs text-slate-600 mb-1.5 leading-relaxed">
+                                    {{ $data['pesan'] ?? ($data['judul'] ?? 'Ada pembaruan pada laporan Anda.') }}
+                                </p>
                                 <div class="flex items-center gap-2">
                                     <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full {{ $statusColor }}">
-                                        {{ $data['status_label'] ?? '' }}
+                                        {{ $badgeLabel }}
                                     </span>
                                     <span class="text-[10px] text-slate-400">{{ $notif->created_at->diffForHumans() }}</span>
                                 </div>

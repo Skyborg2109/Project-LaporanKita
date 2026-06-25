@@ -85,6 +85,7 @@ Route::middleware('auth')->group(function () {
 
         // Admin User Management
         Route::get('/dashboardadmin/users', [DashboardAdminController::class, 'users'])->name('admin.users');
+        Route::post('/dashboardadmin/users', [DashboardAdminController::class, 'storeUser'])->name('admin.users.store');
         Route::get('/dashboardadmin/users/{id}', [DashboardAdminController::class, 'userDetail'])->name('admin.users.show');
         Route::put('/dashboardadmin/users/{id}', [DashboardAdminController::class, 'updateUser'])->name('admin.users.update');
         Route::patch('/dashboardadmin/users/{id}/role', [DashboardAdminController::class, 'updateUserRole'])->name('admin.users.role');
@@ -97,6 +98,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/dashboardadmin/naivebayes/klasifikasi', [NaiveBayesController::class, 'klasifikasi'])->name('admin.naivebayes.klasifikasi');
         Route::get('/dashboardadmin/naivebayes/evaluasi', [NaiveBayesController::class, 'evaluasi'])->name('admin.naivebayes.evaluasi');
         Route::post('/dashboardadmin/naivebayes/reset', [NaiveBayesController::class, 'reset'])->name('admin.naivebayes.reset');
+        Route::post('/dashboardadmin/naivebayes/evaluasi/{id}/koreksi', [NaiveBayesController::class, 'koreksiKategori'])->name('admin.naivebayes.koreksi');
+        // Admin Kategori Management
+        Route::resource('/dashboardadmin/kategori', \App\Http\Controllers\KategoriController::class)->names('admin.kategori')->except(['create', 'show', 'edit']);
     });
 
     // AJAX Predict (untuk form buat laporan user) — butuh auth tapi bukan admin

@@ -78,6 +78,9 @@
                 <span class="material-symbols-outlined text-[20px] group-hover:text-brand-400 transition-colors">filter_alt</span>
                 Filter Laporan
             </a>
+            <a href="{{ route('admin.kategori.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg font-medium text-sm transition-colors group">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-brand-400 transition-colors">category</span> Manajemen Kategori
+            </a>
             <a href="{{ route('admin.users') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg font-medium text-sm transition-colors group">
                 <span class="material-symbols-outlined text-[20px] group-hover:text-brand-400 transition-colors">group</span>
                 Manajemen User
@@ -215,8 +218,12 @@
                                 </div>
                                 <div>
                                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Kategori</p>
+                                    @php
+                                        $currentKategori = \App\Models\Kategori::where('slug', $laporan->kategori)->first();
+                                        $kategoriNama = $currentKategori ? $currentKategori->nama : ucfirst($laporan->kategori ?? 'Umum');
+                                    @endphp
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-white border border-slate-200 text-slate-600">
-                                        {{ ucfirst($laporan->kategori ?? 'Umum') }}
+                                        {{ $kategoriNama }}
                                     </span>
                                 </div>
                                 <div>
@@ -274,6 +281,17 @@
                                     <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider @if($laporan->status === 'baru') text-rose-600 bg-rose-50 border-rose-100 @elseif($laporan->status === 'diproses') text-amber-600 bg-amber-50 border-amber-100 @else text-emerald-600 bg-emerald-50 border-emerald-100 @endif">
                                         {{ $laporan->status }}
                                     </span>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-2 uppercase tracking-wide">Kategori Laporan</label>
+                                    <select name="kategori" class="w-full p-3 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 font-medium" required>
+                                        @foreach($kategoris as $kat)
+                                            <option value="{{ $kat->slug }}" {{ $laporan->kategori === $kat->slug ? 'selected' : '' }}>
+                                                {{ $kat->nama }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div>

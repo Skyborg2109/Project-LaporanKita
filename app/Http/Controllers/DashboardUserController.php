@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Support;
+use App\Models\Kategori;
 use App\Services\CloudinaryService;
 
 class DashboardUserController extends Controller
@@ -31,6 +32,12 @@ class DashboardUserController extends Controller
             ->take(5)
             ->get();
 
+        // Fetch reports from other users
+        $laporanLain = Laporan::with(['user', 'supports'])
+            ->where('user_id', '!=', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         // Notifikasi belum dibaca
         $unreadNotifications = $user->unreadNotifications;
         $unreadCount = $unreadNotifications->count();
@@ -40,6 +47,7 @@ class DashboardUserController extends Controller
             'laporanDiproses',
             'laporanSelesai',
             'laporans',
+            'laporanLain',
             'unreadNotifications',
             'unreadCount'
         ));
@@ -47,7 +55,8 @@ class DashboardUserController extends Controller
 
     public function create()
     {
-        return view('dashboarduser.buatlaporan');
+        $kategoris = Kategori::all();
+        return view('dashboarduser.buatlaporan', compact('kategoris'));
     }
 
     public function store(Request $request)
@@ -68,7 +77,7 @@ class DashboardUserController extends Controller
             }
         }
 
-        Laporan::create([
+        $laporan = Laporan::create([
             'user_id'   => Auth::id(),
             'judul'     => $request->judul,
             'kategori'  => $request->kategori,
@@ -77,6 +86,12 @@ class DashboardUserController extends Controller
             'foto'      => $fotoPaths,
             'status'    => 'baru',
         ]);
+
+        // Kirim notifikasi ke semua admin
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new \App\Notifications\NewLaporanAdminNotification($laporan));
+        }
 
         return redirect()->route('dashboarduser.index')->with('success', 'Laporan berhasil dikirim!');
     }
@@ -233,8 +248,9 @@ class DashboardUserController extends Controller
         }
 
         $unreadCount = $user->unreadNotifications()->count();
+        $kategoris = Kategori::all();
 
-        return view('dashboarduser.editlaporan', compact('laporan', 'unreadCount'));
+        return view('dashboarduser.editlaporan', compact('laporan', 'unreadCount', 'kategoris'));
     }
 
     public function update(Request $request, $id)

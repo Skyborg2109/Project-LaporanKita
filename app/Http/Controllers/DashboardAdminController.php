@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\LaporanStatusNotification;
 use App\Services\CloudinaryService;
+use App\Models\Kategori;
+
 
 class DashboardAdminController extends Controller
 {
@@ -78,18 +80,21 @@ class DashboardAdminController extends Controller
     public function show($id)
     {
         $laporan = Laporan::with('user')->findOrFail($id);
-        return view('dashboardadmin.detaillaporan', compact('laporan'));
+        $kategoris = Kategori::all();
+        return view('dashboardadmin.detaillaporan', compact('laporan', 'kategoris'));
     }
 
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
             'status' => 'required|in:baru,diproses,selesai,ditolak',
+            'kategori' => 'required|string|max:100',
         ]);
 
         $laporan = Laporan::with('user')->findOrFail($id);
         $oldStatus = $laporan->status;
         $laporan->status = $request->status;
+        $laporan->kategori = $request->kategori;
         $laporan->save();
 
         // Kirim notifikasi ke pelapor jika status berubah
@@ -97,7 +102,7 @@ class DashboardAdminController extends Controller
             $laporan->user->notify(new LaporanStatusNotification($laporan));
         }
 
-        return redirect()->back()->with('success', 'Status laporan #' . $laporan->id . ' berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Detail laporan #' . $laporan->id . ' berhasil diperbarui!');
     }
 
     // ========================
@@ -186,6 +191,37 @@ class DashboardAdminController extends Controller
         return view('dashboardadmin.manajemenuser', compact(
             'users', 'totalUsers', 'totalAdmin', 'totalRegular', 'newThisMonth'
         ));
+    }
+
+    public function storeUser(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+            'role'     => 'required|in:admin,user',
+            'telepon'  => 'nullable|string|max:20',
+            'nik'      => 'nullable|string|max:20',
+            'nip'      => 'nullable|string|max:30',
+            'instansi' => 'nullable|string|max:255',
+            'alamat'   => 'nullable|string',
+        ]);
+
+        $user = \App\Models\User::create([
+            'name'        => $request->name,
+            'email'       => $request->email,
+            'password'    => Hash::make($request->password),
+            'role'        => $request->role,
+            'telepon'     => $request->telepon,
+            'nik'         => $request->nik,
+            'nip'         => $request->nip,
+            'instansi'    => $request->instansi,
+            'alamat'      => $request->alamat,
+            'is_active'   => true,
+            'is_verified' => true,
+        ]);
+
+        return redirect()->route('admin.users')->with('success', 'User ' . $user->name . ' berhasil ditambahkan.');
     }
 
     public function userDetail($id)

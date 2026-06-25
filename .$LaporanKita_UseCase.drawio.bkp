@@ -1,0 +1,189 @@
+<mxfile host="app.diagrams.net" modified="2026-06-03" agent="Mozilla/5.0" version="16.0.0" type="device">
+  <diagram id="usecase-diagram" name="LaporanKita Use Case Diagram">
+    <mxGraphModel dx="1000" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- System Boundary -->
+        <mxCell id="boundary" value="LaporanKita System" style="shape=rectangle;rounded=1;fontSize=14;fontStyle=1;strokeWidth=2;strokeColor=#333333;dashed=0" vertex="1" parent="1">
+          <mxGeometry x="180" y="80" width="950" height="750" as="geometry"/>
+        </mxCell>
+        
+        <!-- ACTORS -->
+        <mxCell id="actor-guest" value="Guest User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="30" y="250" width="60" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="actor-user" value="Registered User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="30" y="400" width="60" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="actor-admin" value="Admin" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1130" y="400" width="60" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="actor-system" value="System" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="550" y="850" width="60" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- AUTHENTICATION USE CASES -->
+        <mxCell id="uc-001" value="UC-001 Register" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#B4E5FF;strokeColor=#0066CC;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="250" y="120" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-002" value="UC-002 Login" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#B4E5FF;strokeColor=#0066CC;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="360" y="120" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-003" value="UC-003 Google" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#B4E5FF;strokeColor=#0066CC;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="470" y="120" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-004" value="UC-004 Logout" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#B4E5FF;strokeColor=#0066CC;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="580" y="120" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-005" value="UC-005 Profile" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#B4E5FF;strokeColor=#0066CC;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="690" y="120" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- LAPORAN USE CASES -->
+        <mxCell id="uc-006" value="UC-006 Create Laporan" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#B4FFB4;strokeColor=#00AA00;strokeWidth=3" vertex="1" parent="1">
+          <mxGeometry x="250" y="220" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-007" value="UC-007 View All" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#B4FFB4;strokeColor=#00AA00;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="360" y="220" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-008" value="UC-008 Detail" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#B4FFB4;strokeColor=#00AA00;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="470" y="220" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-009" value="UC-009 My Laporan" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#B4FFB4;strokeColor=#00AA00;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="580" y="220" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-010" value="UC-010 Edit" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#B4FFB4;strokeColor=#00AA00;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="690" y="220" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-011" value="UC-011 Delete" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#B4FFB4;strokeColor=#00AA00;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="800" y="220" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- SUPPORT USE CASES -->
+        <mxCell id="uc-012" value="UC-012 Support" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#FFB4E5;strokeColor=#CC0066;strokeWidth=3" vertex="1" parent="1">
+          <mxGeometry x="360" y="320" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-013" value="UC-013 Supporters" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#FFB4E5;strokeColor=#CC0066;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="470" y="320" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- ADMIN USE CASES -->
+        <mxCell id="uc-014" value="UC-014 Dashboard" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#E5B4FF;strokeColor=#9900CC;strokeWidth=3" vertex="1" parent="1">
+          <mxGeometry x="580" y="320" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-015" value="UC-015 View All" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#E5B4FF;strokeColor=#9900CC;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="690" y="320" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-016" value="UC-016 Filter" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#E5B4FF;strokeColor=#9900CC;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="800" y="320" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-017" value="UC-017 Detail" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#E5B4FF;strokeColor=#9900CC;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="580" y="410" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-018" value="UC-018 Update Status" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#E5B4FF;strokeColor=#9900CC;strokeWidth=3" vertex="1" parent="1">
+          <mxGeometry x="690" y="410" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- ML and NOTIFICATION USE CASES -->
+        <mxCell id="uc-019" value="UC-019 Auto Classify" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#FFE5B4;strokeColor=#FF8800;strokeWidth=3" vertex="1" parent="1">
+          <mxGeometry x="250" y="520" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-020" value="UC-020 Status Notif" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#FFE5B4;strokeColor=#FF8800;strokeWidth=3" vertex="1" parent="1">
+          <mxGeometry x="360" y="520" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="uc-021" value="UC-021 Support Notif" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#FFE5B4;strokeColor=#FF8800;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="470" y="520" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- GUEST USER ASSOCIATIONS -->
+        <mxCell id="ga1" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-guest" target="uc-001"/>
+        <mxCell id="ga2" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-guest" target="uc-002"/>
+        <mxCell id="ga3" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-guest" target="uc-003"/>
+        <mxCell id="ga4" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-guest" target="uc-007"/>
+        <mxCell id="ga5" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-guest" target="uc-008"/>
+        
+        <!-- REGISTERED USER ASSOCIATIONS -->
+        <mxCell id="ua1" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-user" target="uc-002"/>
+        <mxCell id="ua2" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-user" target="uc-004"/>
+        <mxCell id="ua3" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-user" target="uc-005"/>
+        <mxCell id="ua4" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-user" target="uc-006"/>
+        <mxCell id="ua5" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-user" target="uc-007"/>
+        <mxCell id="ua6" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-user" target="uc-008"/>
+        <mxCell id="ua7" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-user" target="uc-009"/>
+        <mxCell id="ua8" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-user" target="uc-010"/>
+        <mxCell id="ua9" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-user" target="uc-011"/>
+        <mxCell id="ua10" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-user" target="uc-012"/>
+        <mxCell id="ua11" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-user" target="uc-013"/>
+        
+        <!-- ADMIN ASSOCIATIONS -->
+        <mxCell id="aa1" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-admin" target="uc-002"/>
+        <mxCell id="aa2" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-admin" target="uc-004"/>
+        <mxCell id="aa3" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-admin" target="uc-014"/>
+        <mxCell id="aa4" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-admin" target="uc-015"/>
+        <mxCell id="aa5" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-admin" target="uc-016"/>
+        <mxCell id="aa6" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-admin" target="uc-017"/>
+        <mxCell id="aa7" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2" edge="1" parent="1" source="actor-admin" target="uc-018"/>
+        
+        <!-- SYSTEM ASSOCIATIONS -->
+        <mxCell id="sa1" value="triggers" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;dashed=1" edge="1" parent="1" source="actor-system" target="uc-019"/>
+        <mxCell id="sa2" value="triggers" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;dashed=1" edge="1" parent="1" source="actor-system" target="uc-020"/>
+        <mxCell id="sa3" value="triggers" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;dashed=1" edge="1" parent="1" source="actor-system" target="uc-021"/>
+        
+        <!-- INCLUDE RELATIONSHIPS -->
+        <mxCell id="inc1" value="includes" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;dashed=1;strokeColor=#FF8800" edge="1" parent="1" source="uc-006" target="uc-019"/>
+        <mxCell id="inc2" value="triggers" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;dashed=1;strokeColor=#FF8800" edge="1" parent="1" source="uc-018" target="uc-020"/>
+        <mxCell id="inc3" value="triggers" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;dashed=1;strokeColor=#FF8800" edge="1" parent="1" source="uc-012" target="uc-021"/>
+        
+        <!-- LEGEND ITEMS -->
+        <mxCell id="leg1" value="LEGEND" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="700" width="100" height="25" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="leg2" value="Blue = Authentication" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="50" y="725" width="140" height="20" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="leg3" value="Green = Laporan Management" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="50" y="745" width="160" height="20" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="leg4" value="Pink = Support System" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="250" y="725" width="140" height="20" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="leg5" value="Purple = Admin Management" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="250" y="745" width="160" height="20" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="leg6" value="Orange = ML and Notifications" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="450" y="725" width="190" height="20" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="leg7" value="Thick stroke = High Priority" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="450" y="745" width="160" height="20" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

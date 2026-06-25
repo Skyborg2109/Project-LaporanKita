@@ -10,7 +10,7 @@ class PublicController extends Controller
     /** Halaman Semua Laporan (publik, dengan filter & search) */
     public function semualaporan(Request $request)
     {
-        $query = Laporan::with('user')->latest();
+        $query = Laporan::with(['user', 'supports'])->latest();
 
         // Filter status
         if ($request->filled('status')) {
@@ -32,8 +32,15 @@ class PublicController extends Controller
         $totalDiproses = Laporan::where('status', 'diproses')->count();
         $totalSelesai  = Laporan::where('status', 'selesai')->count();
 
+        // Cek laporan yang sudah didukung user (jika login)
+        $supportedLaporanIds = collect();
+        if (auth()->check()) {
+            $supportedLaporanIds = \App\Models\Support::where('user_id', auth()->id())
+                ->pluck('laporan_id');
+        }
+
         return view('public.semualaporan', compact(
-            'laporans', 'totalLaporan', 'totalDiproses', 'totalSelesai'
+            'laporans', 'totalLaporan', 'totalDiproses', 'totalSelesai', 'supportedLaporanIds'
         ));
     }
 

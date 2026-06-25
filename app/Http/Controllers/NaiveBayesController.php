@@ -7,6 +7,7 @@ use App\Models\Laporan;
 use App\Services\NaiveBayesService;
 use App\Models\NaiveBayesClass;
 use App\Models\NaiveBayesWord;
+use Illuminate\Support\Facades\DB;
 
 class NaiveBayesController extends Controller
 {
@@ -94,7 +95,50 @@ class NaiveBayesController extends Controller
 
         $batchResult = $this->nb->batchPredict(false);
 
-        return view('dashboardadmin.naivebayes_evaluasi', compact('batchResult', 'modelStats'));
+        $kategoris = \App\Models\Kategori::all();
+
+        return view('dashboardadmin.naivebayes_evaluasi', compact('batchResult', 'modelStats', 'kategoris'));
+    }
+
+    /**
+     * Koreksi kategori laporan oleh admin
+     * Memperbaiki kategori laporan dan mengirim notifikasi ke pelapor
+     */
+    public function koreksiKategori(Request $request, string $id)
+    {
+        $request->validate([
+            'kategori_baru' => 'required|string|max:100',
+        ]);
+
+        $laporan = \App\Models\Laporan::with('user')->findOrFail($id);
+        $kategoriLama = $laporan->kategori;
+        $kategoriBaru = $request->kategori_baru;
+
+        if ($kategoriLama === $kategoriBaru) {
+            return response()->json([
+                'success' => false,
+                'pesan'   => 'Kategori sama, tidak ada perubahan.',
+            ], 400);
+        }
+
+        // Update kategori laporan
+        $laporan->update(['kategori' => $kategoriBaru]);
+
+        // Kirim notifikasi ke pelapor
+        if ($laporan->user) {
+            $laporan->user->notify(new \App\Notifications\KategoriDikoreksiNotification(
+                $laporan,
+                $kategoriLama,
+                $kategoriBaru
+            ));
+        }
+
+        return response()->json([
+            'success' => true,
+            'pesan'   => "Kategori laporan #LPK-{$laporan->id} berhasil dikoreksi dari \"{$kategoriLama}\" menjadi \"{$kategoriBaru}\".",
+            'kategori_lama' => $kategoriLama,
+            'kategori_baru' => $kategoriBaru,
+        ]);
     }
 
     /**
@@ -134,8 +178,8 @@ class NaiveBayesController extends Controller
      */
     public function reset()
     {
-        \DB::table('naive_bayes_words')->truncate();
-        \DB::table('naive_bayes_classes')->truncate();
+        DB::table('naive_bayes_words')->truncate();
+        DB::table('naive_bayes_classes')->truncate();
 
         return redirect()->route('admin.naivebayes')
             ->with('success', 'Model Naive Bayes berhasil direset.');

@@ -78,6 +78,9 @@
                 <span class="material-symbols-outlined text-[20px] group-hover:text-brand-400 transition-colors">filter_alt</span>
                 Filter Laporan
             </a>
+            <a href="{{ route('admin.kategori.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg font-medium text-sm transition-colors group">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-brand-400 transition-colors">category</span> Manajemen Kategori
+            </a>
             <a href="{{ route('admin.users') }}" class="flex items-center gap-3 px-3 py-2.5 bg-brand-800 text-white rounded-lg font-semibold text-sm transition-colors border border-brand-700 shadow-inner">
                 <span class="material-symbols-outlined icon-filled text-[20px] text-brand-400">group</span>
                 Manajemen User
@@ -125,6 +128,10 @@
             <h2 class="font-bold text-brand-900 text-lg hidden sm:block">Manajemen User</h2>
             
             <div class="flex items-center gap-4 ml-auto">
+                <button onclick="openAddUserModal()" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-semibold text-sm transition-all shadow-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">person_add</span>
+                    <span class="hidden sm:inline">Tambah User</span>
+                </button>
                 <a href="{{ route('admin.profil') }}" class="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-full transition-all">
                     <span class="material-symbols-outlined text-[24px]">account_circle</span>
                 </a>
@@ -145,6 +152,20 @@
                 <div class="bg-rose-50 border border-rose-200 text-rose-800 rounded-lg p-4 flex gap-3 shadow-sm mb-4">
                     <span class="material-symbols-outlined text-rose-600">error</span>
                     <p class="text-sm font-medium">{{ session('error') }}</p>
+                </div>
+                @endif
+
+                @if($errors->any())
+                <div class="bg-rose-50 border border-rose-200 text-rose-800 rounded-lg p-4 flex flex-col gap-2 shadow-sm mb-4">
+                    <div class="flex gap-3">
+                        <span class="material-symbols-outlined text-rose-600">error</span>
+                        <p class="text-sm font-bold">Terjadi kesalahan validasi:</p>
+                    </div>
+                    <ul class="list-disc list-inside text-xs pl-7 space-y-1 text-rose-700">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
                 @endif
 
@@ -321,6 +342,97 @@
         </div>
     </main>
 
+    <!-- ==================== MODAL TAMBAH USER ==================== -->
+    <div id="add-user-modal" class="fixed inset-0 bg-slate-900/50 z-50 hidden backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl rounded-2xl border border-slate-200 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden transform scale-95 transition-transform duration-300" id="add-user-modal-container">
+            <!-- Modal Header -->
+            <div class="h-16 flex items-center justify-between px-6 border-b border-slate-100 bg-slate-50/50 shrink-0">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-brand-600 text-[22px]">person_add</span>
+                    <h3 class="font-bold text-slate-800 text-base">Tambah User Baru</h3>
+                </div>
+                <button onclick="closeAddUserModal()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-all">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+            
+            <!-- Modal Form -->
+            <form action="{{ route('admin.users.store') }}" method="POST" class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
+                @csrf
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Nama Lengkap -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Nama Lengkap <span class="text-rose-500">*</span></label>
+                        <input type="text" name="name" required placeholder="Nama lengkap..." class="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all">
+                    </div>
+                    
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Email <span class="text-rose-500">*</span></label>
+                        <input type="email" name="email" required placeholder="alamat@email.com..." class="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all">
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Kata Sandi <span class="text-rose-500">*</span></label>
+                        <input type="password" name="password" required placeholder="Min 8 karakter..." class="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all">
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Konfirmasi Kata Sandi <span class="text-rose-500">*</span></label>
+                        <input type="password" name="password_confirmation" required placeholder="Ulangi kata sandi..." class="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all">
+                    </div>
+
+                    <!-- Role -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Peran (Role) <span class="text-rose-500">*</span></label>
+                        <select name="role" required class="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all">
+                            <option value="user">User (Pelapor)</option>
+                            <option value="admin">Admin (Petugas)</option>
+                        </select>
+                    </div>
+
+                    <!-- Telepon -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">No. Telepon</label>
+                        <input type="text" name="telepon" placeholder="Contoh: 08123456789..." class="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all">
+                    </div>
+
+                    <!-- NIK -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">NIK (16 Digit)</label>
+                        <input type="text" name="nik" placeholder="Nomor Induk Kependudukan..." class="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all">
+                    </div>
+
+                    <!-- NIP -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">NIP (PNS/Petugas)</label>
+                        <input type="text" name="nip" placeholder="Nomor Induk Pegawai..." class="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all">
+                    </div>
+
+                    <!-- Instansi -->
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Instansi / Dinas</label>
+                        <input type="text" name="instansi" placeholder="Instansi terkait..." class="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all">
+                    </div>
+
+                    <!-- Alamat -->
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Alamat Lengkap</label>
+                        <textarea name="alamat" rows="2" placeholder="Alamat domisili..." class="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none"></textarea>
+                    </div>
+                </div>
+                
+                <!-- Modal Footer Actions -->
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 shrink-0">
+                    <button type="button" onclick="closeAddUserModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-semibold text-sm transition-colors">Batal</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-semibold text-sm transition-colors shadow-md">Simpan User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -336,6 +448,26 @@
                 overlay.classList.add('opacity-0');
                 setTimeout(() => { overlay.classList.add('hidden'); }, 300);
             }
+        }
+
+        function openAddUserModal() {
+            const modal = document.getElementById('add-user-modal');
+            const container = document.getElementById('add-user-modal-container');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                container.classList.remove('scale-95');
+                container.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeAddUserModal() {
+            const modal = document.getElementById('add-user-modal');
+            const container = document.getElementById('add-user-modal-container');
+            container.classList.remove('scale-100');
+            container.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
         }
     </script>
 </body>

@@ -478,7 +478,7 @@
             <div class="pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
                 <p class="text-xs text-slate-400">© 2026 LaporanKita. Seluruh hak cipta dilindungi.</p>
                 <div class="flex items-center gap-1 text-xs font-semibold text-slate-400">
-                    <span class="material-symbols-outlined text-[14px]">public</span> Untuk Indonesia Berkemajuan
+                    <span class="material-symbols-outlined text-[14px]">public</span> Untuk Indonesia Maju
                 </div>
             </div>
         </div>

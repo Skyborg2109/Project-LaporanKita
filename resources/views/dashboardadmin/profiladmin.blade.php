@@ -68,6 +68,9 @@
             <a href="{{ route('admin.filter') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg font-medium text-sm transition-colors group">
                 <span class="material-symbols-outlined text-[20px] group-hover:text-teal-400">filter_alt</span>Filter Laporan
             </a>
+            <a href="{{ route('admin.kategori.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg font-medium text-sm transition-colors group">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-brand-400 transition-colors">category</span> Manajemen Kategori
+            </a>
             <a href="{{ route('admin.users') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg font-medium text-sm transition-colors group">
                 <span class="material-symbols-outlined text-[20px] group-hover:text-teal-400">group</span>Manajemen User
             </a>
@@ -136,7 +139,7 @@
                     <div id="notif-dropdown" class="absolute top-full right-0 mt-3 w-[320px] bg-white rounded-2xl shadow-2xl border border-slate-100 transition-all duration-300 opacity-0 scale-95 pointer-events-none z-[110] overflow-hidden text-left">
                         <div class="p-4 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
                             <h4 class="text-sm font-bold text-slate-900">Pemberitahuan</h4>
-                            <a href="#" class="text-[11px] font-bold text-brand-600 hover:text-brand-900 transition-colors">Tandai Dibaca</a>
+                            <a href="#" onclick="markAllNotificationsAsRead(event)" class="text-[11px] font-bold text-brand-600 hover:text-brand-900 transition-colors">Tandai Dibaca</a>
                         </div>
                         <div class="max-h-[350px] overflow-y-auto">
                             @forelse(Auth::user()->notifications->take(5) as $notif)
@@ -375,6 +378,26 @@
                 });
             }
         });
+
+        async function markAllNotificationsAsRead(e) {
+            e.preventDefault();
+            try {
+                const res = await fetch('{{ route("dashboarduser.notifikasi.read") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    window.location.reload();
+                }
+            } catch(error) {
+                console.error('Gagal menandai notifikasi sebagai dibaca:', error);
+            }
+        }
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');

@@ -102,6 +102,10 @@
                 <span class="material-symbols-outlined text-[20px] group-hover:text-brand-400 transition-colors">filter_alt</span>
                 Filter Laporan
             </a>
+            <a href="{{ route('admin.kategori.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg font-medium text-sm transition-colors group">
+                <span class="material-symbols-outlined text-[20px] group-hover:text-brand-400 transition-colors">category</span>
+                Manajemen Kategori
+            </a>
             <a href="{{ route('admin.users') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg font-medium text-sm transition-colors group">
                 <span class="material-symbols-outlined text-[20px] group-hover:text-brand-400 transition-colors">group</span>
                 Manajemen User
@@ -166,10 +170,10 @@
                     </button>
 
                     <!-- Notif Dropdown Content -->
-                    <div id="notif-dropdown" class="absolute top-full right-0 mt-3 w-[320px] bg-white rounded-2xl shadow-2xl border border-slate-100 transition-all duration-300 opacity-0 scale-95 pointer-events-none z-[110] overflow-hidden text-left">
+                    <div id="notif-dropdown" class="absolute top-full right-0 mt-3 w-[320px] bg-white rounded-2xl shadow-2xl border border-slate-100 transition-all duration-300 opacity-0 scale-95 pointer-events-none z-50 overflow-hidden text-left">
                         <div class="p-4 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
                             <h4 class="text-sm font-bold text-slate-900">Pemberitahuan</h4>
-                            <a href="#" class="text-[11px] font-bold text-brand-600 hover:text-brand-900 transition-colors">Tandai Dibaca</a>
+                            <a href="#" onclick="markAllNotificationsAsRead(event)" class="text-[11px] font-bold text-brand-600 hover:text-brand-900 transition-colors">Tandai Dibaca</a>
                         </div>
                         <div class="max-h-[350px] overflow-y-auto">
                             @forelse(Auth::user()->notifications->take(5) as $notif)
@@ -178,7 +182,7 @@
                                     <div class="w-10 h-10 rounded-full @if($notif->unread()) bg-brand-50 text-brand-600 @else bg-slate-50 text-slate-400 @endif flex items-center justify-center shrink-0">
                                         <span class="material-symbols-outlined text-[18px]">@if($notif->data['type'] ?? '' === 'status') rule @else assignment_late @endif</span>
                                     </div>
-                                    <div class="flex-grow min-w-0">
+                                    <div class="grow min-w-0">
                                         <p class="text-xs text-slate-900 font-bold leading-snug group-hover:text-brand-900 transition-colors">
                                             {{ $notif->data['message'] ?? 'Pembaruan Laporan' }}
                                         </p>
@@ -358,8 +362,22 @@
                                         <p class="text-[10px] text-slate-400">{{ $laporan->created_at->format('H:i') }} WITA</p>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded @if($laporan->status === 'baru') bg-rose-50 border-rose-100 text-rose-700 @elseif($laporan->status === 'diproses') bg-amber-50 border-amber-100 text-amber-700 @else bg-emerald-50 border-emerald-100 text-emerald-700 @endif text-[10px] font-bold uppercase tracking-wider">
-                                            <span class="w-1.5 h-1.5 rounded-full @if($laporan->status === 'baru') bg-rose-500 animate-pulse @elseif($laporan->status === 'diproses') bg-amber-500 @else bg-emerald-500 @endif"></span> {{ $laporan->status }}
+                                        @php
+                                            $statusBadgeClass = '';
+                                            $statusDotClass = '';
+                                            if ($laporan->status === 'baru') {
+                                                $statusBadgeClass = 'bg-rose-50 border-rose-100 text-rose-700';
+                                                $statusDotClass = 'bg-rose-500 animate-pulse';
+                                            } elseif ($laporan->status === 'diproses') {
+                                                $statusBadgeClass = 'bg-amber-50 border-amber-100 text-amber-700';
+                                                $statusDotClass = 'bg-amber-500';
+                                            } else {
+                                                $statusBadgeClass = 'bg-emerald-50 border-emerald-100 text-emerald-700';
+                                                $statusDotClass = 'bg-emerald-500';
+                                            }
+                                        @endphp
+                                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded {{ $statusBadgeClass }} text-[10px] font-bold uppercase tracking-wider">
+                                            <span class="w-1.5 h-1.5 rounded-full {{ $statusDotClass }}"></span> {{ $laporan->status }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 text-right space-x-2">
@@ -410,6 +428,26 @@
                 setTimeout(() => {
                     overlay.classList.add('hidden');
                 }, 300);
+            }
+        }
+
+        async function markAllNotificationsAsRead(e) {
+            e.preventDefault();
+            try {
+                const res = await fetch('{{ route("dashboarduser.notifikasi.read") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    window.location.reload();
+                }
+            } catch(error) {
+                console.error('Gagal menandai notifikasi sebagai dibaca:', error);
             }
         }
 

@@ -29,6 +29,13 @@
                             800: '#115e59',
                             900: '#0f172a', // Slate 900
                         }
+                    },
+                    zIndex: {
+                        '100': '100',
+                        '110': '110',
+                    },
+                    aspectRatio: {
+                        '3/4': '3 / 4',
                     }
                 }
             }
@@ -58,54 +65,52 @@
 <body class="bg-[#FAFAFA] text-slate-900 antialiased flex h-screen overflow-hidden selection:bg-brand-500 selection:text-white">
 
     <!-- ==================== SIDEBAR (DESKTOP) ==================== -->
-    <aside class="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 h-full z-20 shrink-0">
-        <div class="h-16 flex items-center px-6 border-b border-slate-100">
+    <aside class="hidden md:flex flex-col w-64 h-full z-20 shrink-0 bg-gradient-to-b from-teal-600 via-brand-500 to-emerald-500 border-r-0">
+        <div class="h-16 flex items-center px-6 border-b border-white/20">
             <div class="flex items-center gap-2.5">
-                <div class="bg-brand-900 text-white p-1.5 rounded flex items-center justify-center">
+                <div class="bg-white/20 backdrop-blur-sm text-white p-1.5 rounded-lg">
                     <span class="material-symbols-outlined icon-filled text-[18px]">maps_ugc</span>
                 </div>
-                <span class="text-lg font-bold tracking-tight text-brand-900">Laporan<span class="text-brand-600">Kita</span></span>
+                <span class="text-lg font-bold tracking-tight text-white">Laporan<span class="text-emerald-200">Kita</span></span>
             </div>
         </div>
 
         <div class="flex-1 overflow-y-auto py-6 px-4 space-y-1.5">
-            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-2">Menu Utama</div>
+            <div class="text-[10px] font-bold text-white/50 uppercase tracking-widest px-2 mb-2">Menu Utama</div>
             
-            <a href="{{ route('dashboarduser.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 hover:text-brand-900 rounded-lg font-medium text-sm transition-colors group">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-brand-600 transition-colors">dashboard</span>
+            <a href="{{ route('dashboarduser.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-white/80 hover:bg-white/15 hover:text-white rounded-xl font-medium text-sm transition-all group">
+                <span class="material-symbols-outlined text-[20px] text-sky-200 group-hover:text-white transition-colors">dashboard</span>
                 Dashboard
             </a>
             
-            <a href="{{ route('laporan.create') }}" class="flex items-center gap-3 px-3 py-2.5 bg-brand-50 text-brand-900 rounded-lg font-semibold text-sm transition-colors">
-                <span class="material-symbols-outlined icon-filled text-[20px] text-brand-600">add_box</span>
+            <a href="{{ route('laporan.create') }}" class="flex items-center gap-3 px-3 py-2.5 bg-white/20 backdrop-blur-sm text-white rounded-xl font-semibold text-sm shadow-sm transition-all">
+                <span class="material-symbols-outlined icon-filled text-[20px]">add_box</span>
                 Buat Laporan
             </a>
             
-            <a href="{{ route('dashboarduser.laporan') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 hover:text-brand-900 rounded-lg font-medium text-sm transition-colors group">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-brand-600 transition-colors">assignment</span>
+            <a href="{{ route('dashboarduser.laporan') }}" class="flex items-center gap-3 px-3 py-2.5 text-white/80 hover:bg-white/15 hover:text-white rounded-xl font-medium text-sm transition-all group">
+                <span class="material-symbols-outlined text-[20px] text-amber-200 group-hover:text-white transition-colors">assignment</span>
                 Laporan Saya
             </a>
 
-            <a href="{{ route('dashboarduser.notifikasi') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 hover:text-brand-900 rounded-lg font-medium text-sm transition-colors group relative">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-brand-600 transition-colors">notifications</span>
+            <a href="{{ route('dashboarduser.notifikasi') }}" class="flex items-center gap-3 px-3 py-2.5 text-white/80 hover:bg-white/15 hover:text-white rounded-xl font-medium text-sm transition-all group relative">
+                <span class="material-symbols-outlined text-[20px] text-rose-200 group-hover:text-white transition-colors">notifications</span>
                 Notifikasi
                 @if(isset($unreadCount) && $unreadCount > 0)
-                <span class="ml-auto bg-rose-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center">{{ $unreadCount }}</span>
+                <span class="ml-auto bg-rose-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center shadow-sm">{{ $unreadCount }}</span>
                 @endif
             </a>
 
-            <a href="{{ route('dashboarduser.profil') }}" class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 hover:text-brand-900 rounded-lg font-medium text-sm transition-colors group">
-                <span class="material-symbols-outlined text-[20px] group-hover:text-brand-600 transition-colors">manage_accounts</span>
+            <a href="{{ route('dashboarduser.profil') }}" class="flex items-center gap-3 px-3 py-2.5 text-white/80 hover:bg-white/15 hover:text-white rounded-xl font-medium text-sm transition-all group">
+                <span class="material-symbols-outlined text-[20px] text-emerald-200 group-hover:text-white transition-colors">manage_accounts</span>
                 Profil Saya
             </a>
         </div>
 
-        <div class="p-4 border-t border-slate-100">
-
-            
+        <div class="p-4 border-t border-white/20">
             <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
                 @csrf
-                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 text-rose-600 hover:bg-rose-50 rounded-lg font-medium text-sm transition-colors text-left">
+                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 text-white/70 hover:bg-white/15 hover:text-white rounded-xl font-medium text-sm transition-all text-left">
                     <span class="material-symbols-outlined text-[20px]">logout</span>
                     Keluar
                 </button>
@@ -133,7 +138,7 @@
                 </button>
 
                 <!-- Mobile Notif Dropdown Content -->
-                <div id="notif-dropdown-mobile" class="fixed top-16 left-4 right-4 bg-white rounded-2xl shadow-2xl border border-slate-100 transition-all duration-300 opacity-0 scale-95 pointer-events-none z-[110] overflow-hidden text-left max-h-[70vh] flex flex-col">
+                <div id="notif-dropdown-mobile" class="fixed top-16 left-4 right-4 bg-white rounded-2xl shadow-2xl border border-slate-100 transition-all duration-300 opacity-0 scale-95 pointer-events-none z-110 overflow-hidden text-left max-h-[70vh] flex flex-col">
                     <div class="p-4 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
                         <h4 class="text-sm font-bold text-slate-900">Pemberitahuan</h4>
                         <a href="#" class="text-[11px] font-bold text-brand-600 hover:text-brand-900 transition-colors">Tandai Dibaca</a>
@@ -146,7 +151,7 @@
                                     <div class="w-10 h-10 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
                                         <span class="material-symbols-outlined text-[18px]">@if(($notif->data['type'] ?? '') === 'status') rule @else assignment_late @endif</span>
                                     </div>
-                                    <div class="flex-grow min-w-0">
+                                    <div class="grow min-w-0">
                                         <p class="text-xs text-slate-900 font-bold leading-snug group-hover:text-brand-900 transition-colors">
                                             {{ $notif->data['pesan'] ?? 'Pembaruan Laporan' }}
                                         </p>
@@ -180,10 +185,10 @@
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
                 <input type="text" placeholder="Cari laporan Anda..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all" />
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-4">
                 <!-- Desktop Notification Dropdown -->
                 <div class="relative" id="notif-wrapper">
-                    <button id="notif-toggle" class="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-full transition-all relative">
+                    <button id="notif-toggle" class="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-full transition-all relative flex items-center justify-center">
                         <span class="material-symbols-outlined text-[24px]">notifications</span>
                         @if(isset($unreadCount) && $unreadCount > 0)
                         <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white animate-pulse"></span>
@@ -191,7 +196,7 @@
                     </button>
 
                     <!-- Notif Dropdown Content -->
-                    <div id="notif-dropdown" class="absolute top-full right-0 mt-3 w-[320px] bg-white rounded-2xl shadow-2xl border border-slate-100 transition-all duration-300 opacity-0 scale-95 pointer-events-none z-[110] overflow-hidden text-left">
+                    <div id="notif-dropdown" class="absolute top-full right-0 mt-3 w-[320px] bg-white rounded-2xl shadow-2xl border border-slate-100 transition-all duration-300 opacity-0 scale-95 pointer-events-none z-110 overflow-hidden text-left">
                         <div class="p-4 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
                             <h4 class="text-sm font-bold text-slate-900">Pemberitahuan</h4>
                             <a href="#" class="text-[11px] font-bold text-brand-600 hover:text-brand-900 transition-colors">Tandai Dibaca</a>
@@ -204,7 +209,7 @@
                                         <div class="w-10 h-10 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
                                             <span class="material-symbols-outlined text-[18px]">@if(($notif->data['type'] ?? '') === 'status') rule @else assignment_late @endif</span>
                                         </div>
-                                        <div class="flex-grow min-w-0">
+                                        <div class="grow min-w-0">
                                             <p class="text-xs text-slate-900 font-bold leading-snug group-hover:text-brand-900 transition-colors">
                                                 {{ $notif->data['pesan'] ?? 'Pembaruan Laporan' }}
                                             </p>
@@ -231,20 +236,14 @@
                     </div>
                 </div>
 
-                <!-- User Profile Info -->
-                <div class="flex items-center gap-3 pl-3 border-l border-slate-100 ml-1">
-                    <div class="text-right hidden sm:block">
-                        <p class="text-xs font-bold text-slate-900 leading-tight">{{ auth()->user()->name }}</p>
-                        <p class="text-[10px] {{ auth()->user()->is_verified ? 'text-emerald-600' : 'text-slate-400' }} font-bold uppercase tracking-tighter">
-                            {{ auth()->user()->is_verified ? 'Terverifikasi' : 'Belum Terverifikasi' }}
-                        </p>
-                    </div>
+                <!-- User Profile Avatar (Berdampingan langsung dengan notif) -->
+                <a href="{{ route('dashboarduser.profil') }}" class="flex items-center hover:opacity-85 transition-all shrink-0" title="Profil Saya">
                     @if(auth()->user()->foto_profil)
                         <img src="{{ str_starts_with(auth()->user()->foto_profil, 'http') ? auth()->user()->foto_profil : Storage::url(auth()->user()->foto_profil) }}" alt="Avatar" class="w-9 h-9 rounded-full border border-slate-200 object-cover" />
                     @else
                         <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=f1f5f9&color=0f172a" alt="Avatar" class="w-9 h-9 rounded-full border border-slate-200" />
                     @endif
-                </div>
+                </a>
             </div>
         </header>
 
@@ -283,11 +282,9 @@
                                 <div class="relative">
                                     <select name="kategori" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 input-focus appearance-none text-slate-700 font-medium" required>
                                         <option value="" disabled selected>Pilih Kategori</option>
-                                        <option value="infrastruktur">Infrastruktur</option>
-                                        <option value="kebersihan">Kebersihan & Lingkungan</option>
-                                        <option value="ketertiban">Ketertiban Umum</option>
-                                        <option value="fasilitas">Fasilitas Publik</option>
-                                        <option value="lainnya">Lainnya</option>
+                                        @foreach($kategoris as $kat)
+                                            <option value="{{ $kat->slug }}">{{ $kat->nama }}</option>
+                                        @endforeach
                                     </select>
                                     <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
                                 </div>
@@ -370,7 +367,7 @@
     </main>
 
     <!-- Camera Modal -->
-    <div id="camera-modal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4">
+    <div id="camera-modal" class="fixed inset-0 z-100 hidden bg-black/90 backdrop-blur-md flex-col items-center justify-center p-4">
         <div class="relative w-full max-w-lg bg-slate-900 rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-slate-700">
             <!-- Header Modal -->
             <div class="p-4 flex items-center justify-between border-b border-slate-800 bg-slate-900/50">
@@ -384,7 +381,7 @@
             </div>
             
             <!-- Video Container -->
-            <div class="relative aspect-[3/4] bg-black flex items-center justify-center overflow-hidden">
+            <div class="relative aspect-3/4 bg-black flex items-center justify-center overflow-hidden">
                 <video id="camera-preview" autoplay playsinline class="w-full h-full object-cover"></video>
                 <!-- Overlay Focus -->
                 <div class="absolute inset-8 border-2 border-white/20 rounded-2xl pointer-events-none"></div>
@@ -422,7 +419,7 @@
             <span class="text-[10px] font-medium mt-1 tracking-wide">Riwayat</span>
         </a>
         <div class="relative -top-5 shrink-0 px-2">
-            <a href="#" class="bg-brand-900 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_8px_20px_-6px_rgba(15,23,42,0.6)] border-[4px] border-[#FAFAFA]">
+            <a href="#" class="bg-brand-900 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_8px_20px_-6px_rgba(15,23,42,0.6)] border-4 border-[#FAFAFA]">
                 <span class="material-symbols-outlined icon-filled text-[28px]">add</span>
             </a>
         </div>
@@ -661,6 +658,7 @@
                     
                     video.srcObject = stream;
                     cameraModal.classList.remove('hidden');
+                    cameraModal.classList.add('flex');
                     document.body.style.overflow = 'hidden'; // Prevent scroll
                 } catch (err) {
                     console.error('Error accessing camera:', err);
@@ -675,6 +673,7 @@
                 }
                 video.srcObject = null;
                 cameraModal.classList.add('hidden');
+                cameraModal.classList.remove('flex');
                 document.body.style.overflow = '';
             }
 

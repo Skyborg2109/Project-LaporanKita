@@ -96,6 +96,12 @@ class LaporanApiController extends Controller
             'status'    => 'baru',
         ]);
 
+        // Kirim notifikasi ke semua admin
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new \App\Notifications\NewLaporanAdminNotification($laporan));
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Laporan berhasil dibuat',
